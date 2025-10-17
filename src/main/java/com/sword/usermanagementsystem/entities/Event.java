@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /*Note that we create the table in the code, but we add rows to the tables and fill in values in the db browser
@@ -25,21 +26,29 @@ public class Event {
     private int courseid;
 
     @Column(name = "starttime")
-    private LocalTime starttime; /*change type to LocalDateTime (drop or alter and then change type)
-    (figure out how to change it in the code but have it not mess everything up like when it threw errors) */
+    private LocalDateTime starttime;
 
     @Column(name = "endtime")
-    private LocalTime endtime;/*change type to LocalDateTime (drop or alter and then change type)
-    (figure out how to change it in the code but have it not mess everything up like when it threw errors) */
+    private LocalDateTime endtime;
 
     //Many events to one teacher
-    @ManyToOne
-    @JoinColumn(name = "teacherid", referencedColumnName = "id") //add cascade
+    @ManyToOne(cascade = CascadeType.ALL) //added cascade
+    @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
     private Teacher teacher;
-    //Make a new class called EventDto, the exact same as this one, but...
-    //change instance variable type from Teacher to TeacherDto (keep same name though for the variable as teacher)
-    //each Event in this list should be left null (try also to not leave null and see what happens, just to test it out)
-    //also play around with eager loading, see which is better between it and lazy loading
-    //if you have extra time, then, after mapping manually, try using mapstruct
-    //PLEASE DON'T FORGET TO ACTUALLY TEST IT THIS TIME (return to client)
+
+    /*The infinite loop happens because of how Java objects reference each other in memory when converting to JSON, not
+    because of the foreign key itself.*/
+
+
+    /*
+    @ManyToOne → EAGER by default (JPA will fetch the Teacher when the Event is loaded)
+    @OneToMany → LAZY by default (JPA will NOT fetch events when Teacher is loaded, unless accessed).
+
+    If Teacher.events is LAZY and you try to access teacher.getEvents() outside a transaction (e.g., in controller
+    after session closed), you'll get LazyInitializationException. To avoid this you can Use DTOs and write a query
+    that returns DTOs directly (this is the option we went with)
+
+    If Event.teacher is EAGER (default) and you serialize Event entity to JSON, the teacher will be pulled immediately
+
+    */
 }
