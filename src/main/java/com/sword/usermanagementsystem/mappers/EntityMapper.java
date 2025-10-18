@@ -26,9 +26,9 @@ public class EntityMapper {
 
         /*instead of embedding a full TeacherDto inside the EventDto, we set only teacherId. This breaks the entity
          cycle (Teacher → Event → Teacher) and prevents infinite JSON recursion. */
-        if(event.getTeacher() != null){
-            dto.setTeacherid(event.getTeacher().getId());
-        }
+       // if(event.getTeacher() != null){
+         //   dto.setTeacherid(event.getTeacher().getId());
+        //}
 
         //finished DTO ready to be serialized to JSON by Spring.
         return dto;

@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ public class TeacherController {
     TeacherService service;
 
     @GetMapping("/all")
-    public List<Teacher> getTeachers(){
+    public List<TeacherDTO> getTeachers(){ //only needed teacher controller and not event controller because it was a
+        // OneToMany relationship, so we were retrieving list from the one teacher object
         var x = service.getAllTeachers();
-        return null;
+        return x;
     }
 }

@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-    /*primary key is of type Integer, that's why it's listed next to the Student entity (as in ER diagram entity)
-    (defined by the Student class) in the interface declaration */
+    /*primary key is of type Integer, that's why it's listed next to the Student entity */
 }
