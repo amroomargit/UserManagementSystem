@@ -32,4 +32,13 @@ public class EventService {
         }
         return eventDTOs;
     }
+
+
+    /* For One-to-Many (Teacher → Event), only needed TeacherController because each Teacher “owned” their Events. You
+    can fetch all Events indirectly through /teachers/all. Now, with Many-to-Many (Event ↔ Course), neither side
+    owns the other, they’re equal. You have to choose one to expose first.
+
+    EventService and EventController, were chosen purely as a test entry point (no deeper reason). It’s arbitrary,
+    you could have picked Course instead.
+    */
 }
