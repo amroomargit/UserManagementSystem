@@ -18,7 +18,7 @@ public class TeacherController {
     TeacherService service;
 
     @GetMapping("/all")
-    public List<TeacherDTO> getTeachers(){ //only needed teacher controller and not event controller because it was a
+    public List<TeacherDTO> getTeachers(){ //only needed teacher controller and not course controller because it was a
         // OneToMany relationship, so we were retrieving list from the one teacher object
         var x = service.getAllTeachers();
         return x;

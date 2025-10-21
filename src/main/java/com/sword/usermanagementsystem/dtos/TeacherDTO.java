@@ -1,6 +1,5 @@
 package com.sword.usermanagementsystem.dtos;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -13,5 +12,5 @@ public class TeacherDTO {
     private int id;
     private String name;
 
-    private List<EventDTO> events;
+    private List<CourseDTO> courses;
 }

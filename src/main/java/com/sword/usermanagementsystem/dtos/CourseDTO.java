@@ -13,10 +13,15 @@ import java.util.List;
 public class CourseDTO {
 
     private int id;
-    private String topic;
-    private LocalDateTime introdate;
+    private int topicid;
+    private LocalDateTime starttime;
+    private LocalDateTime endtime;
+    //private Integer teacherid; //not needed, null because we already know it's owner
 
-    /* Has to be list of Integer objects referencing each other's primary keys because a list of DTO objects
-    for a ManyToMany relationship causes infinite recursion */
-    private List<Integer> eventIds;
+    //Stopping the reference in the list is what stops the infinite loop, not the reference at the end of the class
+    private TeacherDTO teacher;
+
+    // Has to be list of Integer objects referencing each other's primary keys because a list of DTO objects
+    // for a ManyToMany relationship causes infinite recursion
+    private List<Integer> topicIds;
 }

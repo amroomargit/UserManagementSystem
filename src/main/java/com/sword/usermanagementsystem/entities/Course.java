@@ -1,15 +1,17 @@
 package com.sword.usermanagementsystem.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/*Note that we create the table in the code, but we add rows to the tables and fill in values in the db browser
+(i.e. DataGrip, PgAdmin, etc.), not the code */
+
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "course")
@@ -19,12 +21,23 @@ public class Course {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "topic")
-    private String topic;
+    @Column(name = "topicid")
+    private int topicid;
 
-    @Column(name = "introdate")
-    private LocalDateTime introdate;
+    @Column(name = "starttime")
+    private LocalDateTime starttime;
 
-    @ManyToMany(mappedBy = "courses") //"courses" because that's the list name in Event class
-    private List<Event> events; //List for Many to Many, not just regular object like Many To One
+    @Column(name = "endtime")
+    private LocalDateTime endtime;
+
+    //Many courses to one teacher
+    @ManyToOne(cascade = CascadeType.ALL)
+    //JoinColumn connects primary and foreign keys
+    @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
+    private Teacher teacher;
+
+    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
+    @JoinTable(name = "course_topic", joinColumns = @JoinColumn(name = "courseid") /*FK to course*/, inverseJoinColumns = @JoinColumn(name = "topicid")/*FK to topic*/)
+    private List<Topic> topics;
+
 }

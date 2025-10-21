@@ -22,9 +22,9 @@ public class Teacher {
     @Column(name = "name")
     private String name;
 
-    //One teacher to many events
+    //One teacher to many courses
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
-    private List<Event> events;
+    private List<Course> courses;
 
 
     /*The infinite loop happens because of how Java objects reference each other in memory when converting to JSON, not
@@ -32,14 +32,14 @@ public class Teacher {
 
 
     /*
-    @ManyToOne → EAGER by default (JPA will fetch the Teacher when the Event is loaded)
-    @OneToMany → LAZY by default (JPA will NOT fetch events when Teacher is loaded, unless accessed).
+    @ManyToOne → EAGER by default (JPA will fetch the Teacher when the Course is loaded)
+    @OneToMany → LAZY by default (JPA will NOT fetch courses when Teacher is loaded, unless accessed).
 
-    If Teacher.events is LAZY and you try to access teacher.getEvents() outside a transaction (e.g., in controller
+    If Teacher.courses is LAZY and you try to access teacher.getCourses() outside a transaction (e.g., in controller
     after session closed), you'll get LazyInitializationException. To avoid this you can Use DTOs and write a query
     that returns DTOs directly (this is the option we went with)
 
-    If Event.teacher is EAGER (default) and you serialize Event entity to JSON, the teacher will be pulled immediately
+    If Course.teacher is EAGER (default) and you serialize Course entity to JSON, the teacher will be pulled immediately
 
     */
 }

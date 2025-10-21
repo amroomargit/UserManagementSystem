@@ -17,7 +17,7 @@ public class TeacherService {
     TeacherRepository repo;
 
     @Transactional
-    public List<TeacherDTO> getAllTeachers(){ //OneToMany so we only needed TeacherService, not EventService
+    public List<TeacherDTO> getAllTeachers(){ //OneToMany so we only needed TeacherService, not CourseService
 
         var teachers = repo.findAll();
         List<TeacherDTO> teacherDTOS = new ArrayList<>();
