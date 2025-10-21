@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /*Note that we create the table in the code, but we add rows to the tables and fill in values in the db browser
 (i.e. DataGrip, PgAdmin, etc.), not the code */
 
@@ -29,5 +31,8 @@ public class Student {
 
     @Column(name = "lastname", length = 100)
     private String lastname;
+
+    @ManyToMany(mappedBy = "students") //"students" because that's the list name in Course class
+    private List<Topic> topics; //List for Many to Many, not just regular object like Many To One
 
 }

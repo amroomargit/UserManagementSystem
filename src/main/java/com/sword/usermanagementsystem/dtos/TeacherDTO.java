@@ -12,5 +12,5 @@ public class TeacherDTO {
     private int id;
     private String name;
 
-    private List<CourseDTO> courses;
+    private List<CourseDTO> courseList;
 }

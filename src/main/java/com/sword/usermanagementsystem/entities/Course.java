@@ -21,9 +21,6 @@ public class Course {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "topicid")
-    private int topicid;
-
     @Column(name = "starttime")
     private LocalDateTime starttime;
 
@@ -36,8 +33,9 @@ public class Course {
     @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
     private Teacher teacher;
 
-    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
-    @JoinTable(name = "course_topic", joinColumns = @JoinColumn(name = "courseid") /*FK to course*/, inverseJoinColumns = @JoinColumn(name = "topicid")/*FK to topic*/)
-    private List<Topic> topics;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "topicid", referencedColumnName = "id")
+    private Topic topic;
+
 
 }

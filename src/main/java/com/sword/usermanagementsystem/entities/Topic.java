@@ -19,9 +19,13 @@ public class Topic {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "introdate")
-    private LocalDateTime introdate;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToMany(mappedBy = "topics") //"topics" because that's the list name in Course class
-    private List<Course> courses; //List for Many to Many, not just regular object like Many To One
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Course> courses;
+
+    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
+    @JoinTable(name = "topic_student", joinColumns = @JoinColumn(name = "studentid") /*FK to topic*/, inverseJoinColumns = @JoinColumn(name = "topicid")/*FK to student*/)
+    private List<Student> students;
 }
