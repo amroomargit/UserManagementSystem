@@ -27,15 +27,21 @@ public class Course {
     @Column(name = "endtime")
     private LocalDateTime endtime;
 
-    //Many courses to one teacher
+
+    //ManyToOne between course and teacher
     @ManyToOne(cascade = CascadeType.ALL)
-    //JoinColumn connects primary and foreign keys
-    @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
+    @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/) //The JoinColumn connects primary and foreign keys
     private Teacher teacher;
 
+    //ManyToOne between course and topic
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "topicid", referencedColumnName = "id")
     private Topic topic;
+
+    //ManyToMany between course and student
+    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
+    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "studentid") /*FK to topic*/, inverseJoinColumns = @JoinColumn(name = "courseid")/*FK to student*/)
+    private List<Student> students;
 
 
 }

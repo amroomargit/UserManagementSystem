@@ -25,7 +25,4 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> courses;
 
-    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
-    @JoinTable(name = "topic_student", joinColumns = @JoinColumn(name = "studentid") /*FK to topic*/, inverseJoinColumns = @JoinColumn(name = "topicid")/*FK to student*/)
-    private List<Student> students;
 }

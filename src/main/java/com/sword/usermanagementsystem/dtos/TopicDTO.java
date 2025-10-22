@@ -20,9 +20,5 @@ public class TopicDTO {
     //For the Topic and Course One-To-Many relationship
     private List<CourseDTO> courseList;
 
-    /* Has to be a list of Integer objects referencing each other's primary keys because a list of DTO objects
-    for a ManyToMany relationship causes infinite recursion */
-    //private List<Integer> studentIds;
-
     //private List<TeacherDTO> teacherList;
 }

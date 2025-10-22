@@ -27,7 +27,6 @@ public class TeacherService {
     public List<TeacherDTO> getAllTeachers(){ //OneToMany so we only needed TeacherService, not CourseService
 
         var teachers = repo.findAll();
-        //var result = mapper.toDTOs(teachers);
 
         var result = new ArrayList<TeacherDTO>();
         for(var teacher:teachers){

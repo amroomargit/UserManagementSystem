@@ -32,7 +32,8 @@ public class Student {
     @Column(name = "lastname", length = 100)
     private String lastname;
 
+    //ManyToMany between course and student
     @ManyToMany(mappedBy = "students") //"students" because that's the list name in Course class
-    private List<Topic> topics; //List for Many to Many, not just regular object like Many To One
+    private List<Course> courses; //List for Many to Many, not just regular object like Many To One
 
 }

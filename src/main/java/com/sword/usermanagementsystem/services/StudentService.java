@@ -1,7 +1,9 @@
 package com.sword.usermanagementsystem.services;
 
+import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
-import com.sword.usermanagementsystem.entities.Student;
+import com.sword.usermanagementsystem.mappers.CourseMapper;
+import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +18,30 @@ public class StudentService {
     private StudentRepository studentRepo;
 
     @Autowired
-  //  private StudentTopicMapper mapper; //not sure why there's an error when there's a spring bean of the mapper class defined at the top of that class
+    private StudentMapper studentMapper;
 
+    @Autowired
+    CourseMapper courseMapper;
 
+    //ManyToMany between courses and students
     @Transactional
     public List<StudentDTO> getAllStudents(){
-        List<Student> students = studentRepo.findAll();
-        List<StudentDTO> studentDTOS = new ArrayList<>();
+        var students = studentRepo.findAll();
 
+        var result = new ArrayList<StudentDTO>();
+        for(var student:students){
+            var courses = student.getCourses();
+            var studentDTO = studentMapper.toDTO(student);
+            studentDTO.setCourseList(new ArrayList<CourseDTO>());
 
-        for(Student e : students){
-            //mapping each entity to a DTO
-           // StudentDTO dto = mapper.studentToStudentDTO(e);
-            //studentDTOS.add(dto);
+            for(var course:courses){
+                var courseDTO  = courseMapper.toDTO(course);
+                studentDTO.getCourseList().add(courseDTO);
+
+            }
+            result.add(studentDTO);
         }
-        return studentDTOS;
+
+        return result;
     }
 }

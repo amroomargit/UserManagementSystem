@@ -1,6 +1,9 @@
 package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
+import com.sword.usermanagementsystem.dtos.StudentDTO;
+import com.sword.usermanagementsystem.mappers.CourseMapper;
+import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +18,32 @@ public class CourseService {
     @Autowired
     CourseRepository repo;
 
+    @Autowired
+    CourseMapper courseMapper;
+
+    @Autowired
+    StudentMapper studentMapper;
+
+    //ManyToMany between courses and students
     @Transactional
     public List<CourseDTO> getAllCourses(){
 
         var courses = repo.findAll();
-        List<CourseDTO> courseDTOS = new ArrayList<>();
 
+        var result = new ArrayList<CourseDTO>();
         for(var course:courses){
-            //var dto = EntityMapper2.toCourseDto(course);
-            //courseDTOS.add(dto);
+            var students = course.getStudents();
+            var courseDTO = courseMapper.toDTO(course);
+            courseDTO.setStudentList(new ArrayList<StudentDTO>());
+
+            for(var student:students){
+                var studentDTO  = studentMapper.toDTO(student);
+                courseDTO.getStudentList().add(studentDTO);
+
+            }
+            result.add(courseDTO);
         }
-        return courseDTOS;
+
+        return result;
     }
 }

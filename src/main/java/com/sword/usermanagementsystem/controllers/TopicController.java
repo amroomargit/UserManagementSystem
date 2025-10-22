@@ -13,15 +13,12 @@ import java.util.List;
 @RequestMapping("/topics")
 public class TopicController {
 
-    //this controller is for the topic and student many-to-many relationship
-
     @Autowired
     private TopicService service;
 
     @GetMapping("/all")
-    public List<TopicDTO> getTopics(){ //only needed teacher controller and not course controller because it was a
-        // OneToMany relationship, so we were retrieving list from the one teacher object
-        var x = service.getAllTopics();
-        return x;
+    public List<TopicDTO> getTopics(){
+        var topicReturnVariable = service.getAllTopics(); //topicReturnVariable is needed so we can see in debugger
+        return topicReturnVariable;
     }
 }

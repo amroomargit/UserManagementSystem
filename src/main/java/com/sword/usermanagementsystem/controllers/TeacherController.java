@@ -18,9 +18,11 @@ public class TeacherController {
     private TeacherService service;
 
     @GetMapping("/all")
-    public List<TeacherDTO> getTeachers(){ //only needed teacher controller and not course controller because it was a
-        // OneToMany relationship, so we were retrieving list from the one teacher object
-        var x = service.getAllTeachers();
-        return x;
+    /* Only needed teacher controller and not course controller because it was a
+    OneToMany relationship, so we were retrieving list from the one teacher object */
+    public List<TeacherDTO> getTeachers(){
+        var teacherReturnVariable = service.getAllTeachers();
+        return teacherReturnVariable;
+        //teacherReturnVariable is needed so we can see in debugger
     }
 }
