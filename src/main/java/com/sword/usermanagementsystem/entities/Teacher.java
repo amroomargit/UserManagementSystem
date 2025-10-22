@@ -26,6 +26,11 @@ public class Teacher {
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
     private List<Course> courses;
 
+    //Teacher and User
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    private User user;
+
 
     /*The infinite loop happens because of how Java objects reference each other in memory when converting to JSON, not
     because of the foreign key itself.*/

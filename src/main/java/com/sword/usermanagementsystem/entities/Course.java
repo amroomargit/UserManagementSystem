@@ -39,8 +39,8 @@ public class Course {
     private Topic topic;
 
     //ManyToMany between course and student
-    @ManyToMany //mappedBy should only be on one side (the inverse side, so Topic class)
-    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "studentid") /*FK to topic*/, inverseJoinColumns = @JoinColumn(name = "courseid")/*FK to student*/)
+    @ManyToMany //mappedBy should only be on one side (the inverse side, so Course class)
+    @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "courseid") /*FK to course*/, inverseJoinColumns = @JoinColumn(name = "studentid")/*FK to student*/)
     private List<Student> students;
 
 

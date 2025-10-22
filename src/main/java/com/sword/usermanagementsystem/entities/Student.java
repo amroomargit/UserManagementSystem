@@ -23,9 +23,6 @@ public class Student {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "userid")
-    private int userid;
-
     @Column(name = "firstname", length = 100)
     private String firstname;
 
@@ -35,5 +32,10 @@ public class Student {
     //ManyToMany between course and student
     @ManyToMany(mappedBy = "students") //"students" because that's the list name in Course class
     private List<Course> courses; //List for Many to Many, not just regular object like Many To One
+
+    //Student and User
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    private User user;
 
 }

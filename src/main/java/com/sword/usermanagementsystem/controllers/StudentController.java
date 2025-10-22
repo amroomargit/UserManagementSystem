@@ -18,10 +18,15 @@ public class StudentController {
 
     @GetMapping("/all")
     public List<StudentDTO> getAllStudents(){
-        var studentReturnVariable = service.getAllStudents(); //The variable x is needed so we can see in debugger
+        var studentReturnVariable = service.getAllStudents(); //studentReturnVariable is needed so we can see in debugger
         return studentReturnVariable;
     }
 
+
+    //StudentDTO return method @GetMapping("/student/{id}")
+    //getStudent(@PathVariableId)
+    //StudentService has method that contacts repo build end find by ID, optional.get if no ID was not returned
+    //findById is built in, no need to add to repo
 
 
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
