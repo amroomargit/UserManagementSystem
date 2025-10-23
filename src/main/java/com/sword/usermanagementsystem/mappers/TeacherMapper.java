@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TeacherMapper {
 
-    //Entity to DTO
+    //Entities to DTOs
     List<TeacherDTO> toDTOs(List<Teacher> teacher);
 
     //DTO to Entity
