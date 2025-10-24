@@ -2,6 +2,7 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
+import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
@@ -44,4 +45,13 @@ public class StudentService {
 
         return result;
     }
+
+    /* Method that returns a StudentDTO by the id. The student repository has a built-in findById method, so we use that to find
+    the student matching the id, then the student we found gets mapped into a DTO using the toDTO method we made in StudentMapper class */
+    public StudentDTO getStudentById(int id){
+        Student student = studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Could not find a student with id: "+id));
+        return studentMapper.toDTO(student);
+    }
+
+
 }

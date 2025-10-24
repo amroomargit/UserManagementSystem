@@ -3,7 +3,9 @@ package com.sword.usermanagementsystem.controllers;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,10 +25,15 @@ public class StudentController {
     }
 
 
-    //StudentDTO return method @GetMapping("/student/{id}")
-    //getStudent(@PathVariableId)
-    //StudentService has method that contacts repo build end find by ID, optional.get if no ID was not returned
-    //findById is built in, no need to add to repo
+    /* The id we put in http://localhost:8080/students/student/1 (in this example it's 1) gets passed as a parameter,
+    * and we call the getStudentById method we created in the StudentService class to return the DTO associated with
+    * that id, by finding the student entity and converting it into a DTO, and sending it here, where we return the
+    * DTO we got back. */
+    @GetMapping("student/{id}")
+    public StudentDTO getStudent(@PathVariable int id){
+        StudentDTO studentDTO = service.getStudentById(id);
+        return studentDTO;
+    }
 
 
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
