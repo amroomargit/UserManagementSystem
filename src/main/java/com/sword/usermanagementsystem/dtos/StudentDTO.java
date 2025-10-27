@@ -14,4 +14,6 @@ public class StudentDTO {
 
     //Reference to CourseDTO for the ManyToMany between course and student
     private List<CourseDTO> courseList;
+
+    private UserDTO user; //refer to parent of student by it's name
 }

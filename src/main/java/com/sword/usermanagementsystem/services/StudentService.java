@@ -50,6 +50,11 @@ public class StudentService {
     the student matching the id, then the student we found gets mapped into a DTO using the toDTO method we made in StudentMapper class */
     public StudentDTO getStudentById(int id){
         Student student = studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Could not find a student with id: "+id));
+        /* var optional = studentRepo.findById(id);
+        optional.ifPresent((a)->{});
+        if(optional.isPresent()){
+            var student1 = optional.get();
+        } */
         return studentMapper.toDTO(student);
     }
 

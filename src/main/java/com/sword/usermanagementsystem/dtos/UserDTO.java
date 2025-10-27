@@ -13,8 +13,8 @@ public class UserDTO {
 
     private String username;
     private String password;
-    private StudentDTO studentDTO;
-    private TeacherDTO teacherDTO;
+    private StudentDTO studentEntity; //change name of child of user (studentEntity, not student) to avoid circular reference
+    private TeacherDTO teacherEntity; //change name of child of user (studentEntity, not student) to avoid circular reference
 
 
 }

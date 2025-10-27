@@ -13,4 +13,6 @@ public class TeacherDTO {
     private String name;
 
     private List<CourseDTO> courseList;
+
+    private UserDTO user;
 }
