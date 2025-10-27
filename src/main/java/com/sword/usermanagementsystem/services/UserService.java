@@ -1,10 +1,13 @@
 package com.sword.usermanagementsystem.services;
 
+import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.User;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
+import com.sword.usermanagementsystem.repositories.StudentRepository;
 import com.sword.usermanagementsystem.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class UserService {
     StudentMapper studentMapper;
 
     @Autowired
+    StudentRepository studentRepo;
+
+    @Autowired
     TeacherMapper teacherMapper;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,22 +49,27 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
-    public String studentRegistration(UserDTO userDTO){
+    @Transactional
+    public String studentRegistration(StudentDTO studentDTO){
 
         //check if username is already taken
-        if(userRepo.findByUsername(userDTO.getUsername()).isPresent()){
+        if(userRepo.findByUsername(studentDTO.getUsername()).isPresent()){
             return "Username Already Taken";
             /*No loop prompting for another attempt because Spring Boot REST API is stateless, no ongoing input/output
             loop. Backend should not be waiting for another input, instead, the frontend will try a new prompt.*/
         }
 
         //Encode password (one-way hash & salt using the BCrypt algorithm) (check Google Doc for more info)
-        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-        userDTO.setPassword(encodedPassword);
+        String encodedPassword = passwordEncoder.encode(studentDTO.getPassword());
+        studentDTO.setPassword(encodedPassword);
 
         //Save to database
-        User userEntity = userMapper.toEntity(userDTO);
+        User userEntity = userMapper.toEntity(studentDTO);
         userRepo.save(userEntity);
+        //studentRepo.save(studentMapper.toEntity(studentDTO));
+        Student student = studentMapper.toEntity(studentDTO);
+        student.setUser(userEntity);
+        studentRepo.save(student);
 
         return "Student Registered Successfully.";
     }

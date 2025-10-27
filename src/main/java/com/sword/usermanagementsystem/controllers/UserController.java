@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
 import com.sword.usermanagementsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +22,17 @@ public class UserController {
     }
 
     @PostMapping("/register") //PostMapping for submitting data (like registering a new user)
-    public String registerStudent(@RequestBody UserDTO userDTO){
-
-        //Calling method from UserService with the object we made called service
-        return service.studentRegistration(userDTO);
+    public String registerStudent(@RequestBody StudentDTO studentDTO){
+        return service.studentRegistration(studentDTO); //Calling method from UserService with the object we made called service
     }
 
 
-    /*Check Google Doc to understand @RequestBody, but basically it allows us to take whatever the user enters into
-    the local host, and to convert it into JSON format, and then into a UserDTO, which we are going to use in this
-    method, to pass to the studentLogin method in UserService*/
+
+    /*@RequestBody allows us to take whatever the user enters into the local host, and to convert it into JSON format,
+    and then into a UserDTO, which we are going to use in this method, to pass to the studentLogin method in UserService*/
     @PostMapping("/login")
     public String loginStudent(@RequestBody UserDTO userDTO){
-
-        //Calling method from UserService with the object we made called service
-        boolean isValid = service.studentLogin(userDTO.getUsername(), userDTO.getPassword());
+        boolean isValid = service.studentLogin(userDTO.getUsername(), userDTO.getPassword()); //Calling method from UserService with the object we made called service
         return isValid ? "Login successful" : "Invalid credentials"; //Returns one of these two messages based on if the studentLogin in UserService returns true or false
     }
 }

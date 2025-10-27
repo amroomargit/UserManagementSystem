@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StudentDTO {
+public class StudentDTO extends UserDTO{
     private int id;
     private String firstname;
     private String lastname;
