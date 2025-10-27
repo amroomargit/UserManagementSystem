@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StudentDTO extends UserDTO{
+public class StudentDTO extends UserDTO{ //StudentDTO inherits UserDTO so we can fill out more info for studentRegistration method in UserService
     private int id;
     private String firstname;
     private String lastname;
