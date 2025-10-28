@@ -19,9 +19,9 @@ public class StudentController {
     private StudentService service;
 
     @GetMapping("/all")
-    public List<StudentDTO> getAllStudents(){
+    public ResponseEntity<List<StudentDTO>> getAllStudents(){
         var studentReturnVariable = service.getAllStudents(); //studentReturnVariable is needed so we can see in debugger
-        return studentReturnVariable;
+        return ResponseEntity.ok().body(studentReturnVariable);
     }
 
 
@@ -30,9 +30,9 @@ public class StudentController {
     * that id, by finding the student entity and converting it into a DTO, and sending it here, where we return the
     * DTO we got back. */
     @GetMapping("student/{id}")
-    public StudentDTO getStudent(@PathVariable int id){
+    public ResponseEntity<StudentDTO> getStudent(@PathVariable int id){
         StudentDTO studentDTO = service.getStudentById(id);
-        return studentDTO;
+        return ResponseEntity.ok().body(studentDTO);
     }
 
 

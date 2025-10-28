@@ -3,6 +3,7 @@ package com.sword.usermanagementsystem.controllers;
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +18,10 @@ public class CourseController {
     private CourseService service;
 
     @GetMapping("/all")
-    public List<CourseDTO> getAllCourses(){
+    public ResponseEntity<List<CourseDTO>> getAllCourses(){
         var courseReturnVariable = service.getAllCourses(); //courseReturnVariable is needed so we can see in debugger
-        return courseReturnVariable;
+        return ResponseEntity.ok().body(courseReturnVariable);
     }
-
 
 
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You

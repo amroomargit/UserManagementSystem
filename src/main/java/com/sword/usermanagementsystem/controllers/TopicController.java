@@ -3,6 +3,7 @@ package com.sword.usermanagementsystem.controllers;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,8 @@ public class TopicController {
     private TopicService service;
 
     @GetMapping("/all")
-    public List<TopicDTO> getTopics(){
+    public ResponseEntity<List<TopicDTO>> getTopics(){
         var topicReturnVariable = service.getAllTopics(); //topicReturnVariable is needed so we can see in debugger
-        return topicReturnVariable;
+        return ResponseEntity.ok().body(topicReturnVariable);
     }
 }

@@ -5,6 +5,7 @@ import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.Teacher;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
