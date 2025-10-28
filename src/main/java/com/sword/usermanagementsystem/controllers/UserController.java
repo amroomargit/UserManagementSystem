@@ -5,6 +5,7 @@ import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
 import com.sword.usermanagementsystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,10 @@ public class UserController {
 
 
     @GetMapping("/all") //PostMapping for receiving data)
-    public List<UserDTO> getAllUsers(){
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
         var userReturnVariable = service.getAllUsers();
-        return userReturnVariable;
+        //return userReturnVariable;
+        return ResponseEntity.ok().body(userReturnVariable);
     }
 
 

@@ -1,6 +1,8 @@
 package com.sword.usermanagementsystem.repositories;
 
 import com.sword.usermanagementsystem.entities.User;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
