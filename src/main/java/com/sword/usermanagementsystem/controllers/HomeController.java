@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class HomeController{
     @RequestMapping("/")
-    public ResponseEntity<String> index(){
+    public ResponseEntity<String> index(){ //Check doc to see why we return ResponseEntity<>
         return ResponseEntity.ok().body("hello");
     }
 }

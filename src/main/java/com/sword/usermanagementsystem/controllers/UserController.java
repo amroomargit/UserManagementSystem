@@ -26,7 +26,7 @@ public class UserController {
 
 
     @PostMapping("/register/student") //PostMapping for submitting data (like registering a new user)
-    public ResponseEntity<String> registerStudent(@RequestBody StudentDTO studentDTO){
+    public ResponseEntity<String> registerStudent(@RequestBody StudentDTO studentDTO){ //Check doc to see why we return ResponseEntity<>
         return ResponseEntity.ok().body(service.studentRegistration(studentDTO)); //Calling method from UserService with the object we made called service
     }
 

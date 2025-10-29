@@ -19,7 +19,7 @@ public class StudentController {
     private StudentService service;
 
     @GetMapping("/all")
-    public ResponseEntity<List<StudentDTO>> getAllStudents(){
+    public ResponseEntity<List<StudentDTO>> getAllStudents(){ //Check doc to see why we return ResponseEntity<>
         var studentReturnVariable = service.getAllStudents(); //studentReturnVariable is needed so we can see in debugger
         return ResponseEntity.ok().body(studentReturnVariable);
     }

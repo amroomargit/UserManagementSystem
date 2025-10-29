@@ -18,7 +18,7 @@ public class CourseController {
     private CourseService service;
 
     @GetMapping("/all")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(){
+    public ResponseEntity<List<CourseDTO>> getAllCourses(){ //Check doc to see why we return ResponseEntity<>
         var courseReturnVariable = service.getAllCourses(); //courseReturnVariable is needed so we can see in debugger
         return ResponseEntity.ok().body(courseReturnVariable);
     }

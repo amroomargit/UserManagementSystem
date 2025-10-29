@@ -21,7 +21,7 @@ public class TeacherController {
     @GetMapping("/all")
     /* Only needed teacher controller and not course controller because it was a
     OneToMany relationship, so we were retrieving list from the one teacher object */
-    public ResponseEntity<List<TeacherDTO>> getTeachers(){
+    public ResponseEntity<List<TeacherDTO>> getTeachers(){ //Check doc to see why we return ResponseEntity<>
         var teacherReturnVariable = service.getAllTeachers();
         return ResponseEntity.ok().body(teacherReturnVariable);
         //teacherReturnVariable is needed so we can see in debugger
