@@ -20,5 +20,5 @@ public class TopicDTO {
     //For the Topic and Course One-To-Many relationship
     private List<CourseDTO> courseList;
 
-    //private List<TeacherDTO> teacherList;
+    private List<Integer> teacherIds;
 }

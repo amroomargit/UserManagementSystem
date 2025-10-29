@@ -15,4 +15,6 @@ public class TeacherDTO extends UserDTO{ //TeacherDTO inherits UserDTO so that w
     private List<CourseDTO> courseList;
 
     private UserDTO user;
+
+    private List<Integer> topicIds;
 }

@@ -25,4 +25,7 @@ public class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> courses;
 
+    @ManyToMany(mappedBy = "topics")
+    private List<Teacher> teachers;
+
 }

@@ -31,6 +31,11 @@ public class Teacher {
     @JoinColumn(name = "userid", referencedColumnName = "id")
     private User user;
 
+    //Teacher and Topic
+    @ManyToMany
+    @JoinTable(name = "teacher_topic", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private List<Topic> topics;
+
 
     /*The infinite loop happens because of how Java objects reference each other in memory when converting to JSON, not
     because of the foreign key itself.*/
