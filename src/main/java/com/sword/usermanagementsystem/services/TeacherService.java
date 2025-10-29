@@ -54,12 +54,8 @@ public class TeacherService {
         return result;
     }
 
-    //ManyToMany with Topic
-    @PostMapping("/teachers/{teacherId}/topics/{topicId}")
-    /* Parameters below are the integers that will be in the search bar, so
-     http://localhost:8081/teachers/{teacherId}/topics/{topicId} becomes
-     http://localhost:8081/teachers/1/topics/1 */
-    public ResponseEntity<String> assignTopic(@PathVariable int teacherId, @PathVariable int topicId){
+    //This method assigns an existing Topic to the Topic list in the Teacher Entity we specify
+    public String assignTopic(int teacherId, int topicId){
 
         /*Creating an empty teacher entity to pull the corresponding entity saved in the Teacher Repo and assign it to
          this empty object we just created. If the id is not found in the teacher repo, throw an exception because the
@@ -78,6 +74,6 @@ public class TeacherService {
         teacherRepo.save(teacher);
 
         //Return a success message, and if you want to view the changes we just made, check the teacher_topic join table
-        return ResponseEntity.ok().body("Topic Assigned To Teacher Successfully.");
+        return "Topic Assigned To Teacher Successfully.";
     }
 }

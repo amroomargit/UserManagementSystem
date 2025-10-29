@@ -5,9 +5,7 @@ import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +24,18 @@ public class TeacherController {
         return ResponseEntity.ok().body(teacherReturnVariable);
         //teacherReturnVariable is needed so we can see in debugger
     }
+
+
+
+    //Check TeacherService class for description of assignTopic method
+
+    /* Parameters below are the integers that will be in the search bar, so
+     http://localhost:8081/teachers/{teacherId}/topics/{topicId} becomes
+     http://localhost:8081/teachers/1/topics/1 */
+    @PostMapping("/{teacherId}/topics/{topicId}")
+    public ResponseEntity<String> topicAssign(@PathVariable int teacherId, @PathVariable int topicId){
+        String successMessage = service.assignTopic(teacherId,topicId);
+        return ResponseEntity.ok().body(successMessage);
+    }
+
 }
