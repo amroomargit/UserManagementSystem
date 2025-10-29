@@ -16,5 +16,5 @@ public class TeacherDTO extends UserDTO{ //TeacherDTO inherits UserDTO so that w
 
     private UserDTO user;
 
-    private List<Integer> topicIds;
+    private List<Integer> topicIds; //No parent or child in ManyToMany, both are equal
 }
