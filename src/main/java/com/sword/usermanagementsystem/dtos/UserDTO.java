@@ -15,12 +15,15 @@ public class UserDTO {
 
     //@NotBlank is a built-in validation constraint, it ensures the field is not null, empty, or only made of spaces
     //@WhiteSpaceConstraint is our custom validation annotation, it checks for internal whitespaces, and at beginning and end
+    /*With this new edit, everything works the same, except now we decide which fields can and cannot have whitespaces
+    by toggling true or false under canContainSpaces. In any DTO in the future we add these annotations to, we can do
+    the same.*/
     @NotBlank(message = "Username cannot be blank")
-    @WhiteSpaceConstraint
+    @WhiteSpaceConstraint(canContainSpaces = false)
     private String username;
 
     @NotBlank(message = "Password cannot be blank")
-    @WhiteSpaceConstraint
+    @WhiteSpaceConstraint(canContainSpaces = false)
     private String password;
 
     private StudentDTO studentEntity; //change name of child of user (studentEntity, not student) to avoid circular reference

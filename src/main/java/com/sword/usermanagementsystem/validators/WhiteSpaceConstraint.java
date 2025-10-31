@@ -40,4 +40,12 @@ public @interface WhiteSpaceConstraint {
      Class<? extends Payload> [] is an array of classes that implement the payload Interface.
      default{} means it's left empty, unless there is a custom use case. */
     Class<? extends Payload> [] payload() default{};
+
+    /*This allows the constraint to be configurable, basically, this creates a custom property inside your
+    annotation that lets you decide whether a field is allowed to contain spaces or not, instead of just blocking all
+    whitespaces. That is because this annotation and validator will be used for more than just username and password
+    in the future, so we can't block everything out like before.
+
+    default true means that spaces are allowed, false means they aren't. */
+    boolean canContainSpaces() default true;
 }

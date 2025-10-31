@@ -17,6 +17,9 @@ and T is the type of the field we are validating, in this case, a String, since 
 4. Calls its isValid() method for each annotated field (i.e. private String username in the DTO).*/
 public class WhiteSpaceValidator implements ConstraintValidator<WhiteSpaceConstraint,String> {
 
+    //instance variable for the method initialize at the bottom
+    private boolean canContainWhitespaces = false;
+
     /*isValid runs once for each validated field (i.e. username) and decides if it passes or fails validation*/
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context){
@@ -24,10 +27,28 @@ public class WhiteSpaceValidator implements ConstraintValidator<WhiteSpaceConstr
         //StringUtils is a helper class with static methods for working with strings.
         //.isBlank checks for null, empty, or only whitespace
         // this if statement skips validation if String is null or empty
-        if (value == null || value.isBlank()){ // let @NotBlank handle emptiness
-            return true;
+        if (value == null || value.isBlank()){
+            return true; // let @NotBlank handle emptiness
         }
-        // Fail if leading, trailing, or internal whitespace
-        return value.equals(value.trim()) && !value.contains(" ");
+
+        // Only run the no-space allowed rule if it's been decided that spaces are NOT allowed
+        if(!canContainWhitespaces){
+            return value.equals(value.trim()) && !value.contains(" ");
+        }
+
+        // If spaces ARE allowed, always return true
+        return true;
+    }
+
+
+    /* When your validator is first created, Spring passes the annotation instance to this method. That lets you read
+    the canContainSpaces flag the developer set on the annotation (in UserDTO).
+
+    You read the configuration from the annotation, you store it in a field (this.canContainWhitespaces), then isValid()
+    uses that stored value to decide how strict to be.*/
+    @Override
+    public void initialize(WhiteSpaceConstraint constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+        this.canContainWhitespaces = constraintAnnotation.canContainSpaces();
     }
 }
