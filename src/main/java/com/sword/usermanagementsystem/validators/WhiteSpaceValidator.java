@@ -24,12 +24,10 @@ public class WhiteSpaceValidator implements ConstraintValidator<WhiteSpaceConstr
         //StringUtils is a helper class with static methods for working with strings.
         //.isBlank checks for null, empty, or only whitespace
         // this if statement skips validation if String is null or empty
-        if(StringUtils.isBlank(value)){
+        if (value == null || value.isBlank()){ // let @NotBlank handle emptiness
             return true;
         }
-
-        //containsWhitespace(value) checks if the string contains any space, tab, etc.
-        //Returns true if whitespace is found, and false if no whitespace is found
-        return !StringUtils.containsWhitespace(value);
+        // Fail if leading, trailing, or internal whitespace
+        return value.equals(value.trim()) && !value.contains(" ");
     }
 }
