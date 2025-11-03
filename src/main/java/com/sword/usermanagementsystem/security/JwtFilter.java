@@ -11,11 +11,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-public class JwtFilter extends OncePerRequestFilter { //OncePerRequestFilter guarantees that Spring only runs this filter once per request
+//OncePerRequestFilter guarantees that Spring only runs this filter once per request
+public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
 
+    /*Note: A chain is a sequence/pipeline of filters that every request coming in to the controllers
+    (every HTTP request) must pass through before actually reaching the controllers. Basically, this JwtFilter is adding
+    itself as another filter to that long list of filters that must be checked before reaching the controllers.*/
     @Override
     protected void doFilterInternal(HttpServletRequest request, //info about HTTP request (headers, URL, method, etc.)
                                     HttpServletResponse response, //what will be sent back to client if filter stops chain
@@ -32,7 +36,9 @@ public class JwtFilter extends OncePerRequestFilter { //OncePerRequestFilter gua
             return;
         }
 
-        String header = request.getHeader("Authorization"); //Retrieves authorization header from HTTP request
+                /* Retrieves Authorization header from HTTP request (the thing containing the token that the user is
+                 entering to validate themselves */
+        String header = request.getHeader("Authorization");
 
         if(header == null || !header.startsWith("Bearer ")){ //If header is missing or doesn't start with "Bearer ", reject request
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header"); //Sends 401 error and stops processing
@@ -45,8 +51,9 @@ public class JwtFilter extends OncePerRequestFilter { //OncePerRequestFilter gua
             return;
         }
 
-        /*If the token passes all checks, the filter allows the request to continue to the next filter or your controller
+        /* If the token passes all checks, the filter allows the request to continue to the next filter or your controller
         endpoint. From here, your app processes the request normally. */
         filterChain.doFilter(request,response);
+        //This line is literally saying "I've done my job in this filter, now pass the request to the next filter in the chain
     }
 }

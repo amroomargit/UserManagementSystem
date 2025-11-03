@@ -59,6 +59,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    //Return type is generic ? because now several responses could be returned, an error, a pass, a string, etc.
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO or TeacherDTO because we saved them in the User Repo after we converted them into User Entities in their respective classes
         boolean isValid = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
         if(isValid){

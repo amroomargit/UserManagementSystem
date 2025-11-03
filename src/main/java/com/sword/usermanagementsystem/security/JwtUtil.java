@@ -29,20 +29,24 @@ public class JwtUtil {
                 .compact(); //builds token and converts it into compact string
     }
 
-    //Returns true or false to validate if the token passed to it is good or not
+    //Returns true or false to validate if the token passed to it matches the one that is currently in play
     public boolean validateToken(String token){
-        //Tries to parse token using secret key, if successful, the token's signature matches (wasn't tampered with), and isn't expired
+        /*Tries to parse token using secret key, if successful, the token's signature matches (wasn't tampered with),
+        and isn't expired (Basically we are decrypting it to see if all the info that we set when generating the token
+        in the method above matches the token that was passed into this method by a request being sent in Postman, which
+        includes the token in the header, being sent here for validation)*/
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }
-        //If any problem occurs (i.e. token is expired, malformed, has invalid signature, etc) then exception is thrown
+        //If any problem occurs (i.e. token is expired, malformed, has invalid signature, etc.) then exception is thrown
         catch(JwtException e){
             return false;
         }
     }
 
-    //Returns username extracted from the token (basically, if token was made for "Steve", this method returns "Steve")
+    /* Returns username extracted from the token's decrypted payload (basically, if token was made for "Steve", this
+    method returns "Steve") */
     public String extractUsername(String token){
         return Jwts.parserBuilder().setSigningKey(key).build() //Parsing JWT string (using secret key to verify token is authentic)
                 .parseClaimsJws(token).getBody() //Retrieves the token's body (claims)
