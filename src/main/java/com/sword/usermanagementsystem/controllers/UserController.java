@@ -48,29 +48,24 @@ public class UserController {
         return ResponseEntity.ok().body(service.studentRegistration(studentDTO)); //Calling method from UserService with the object we made called service
     }
 
-    @PostMapping("/login/student")
-    public ResponseEntity<?> loginStudent(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO because we saved the StudentDTO in the User Repo after we converted it into a User Entity
-        boolean isValid = service.studentLogin(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
+    /*We have to have a separate register for student and teacher because we want them to appear in the Users table
+    * after registering a new user, but also in either the student or teacher table depending on who registered. The login
+    * can be just one thing because we are pulling from the Users table when logging in, so it doesn't really matter,
+    * but if we made the register centralized, we would have to include some other sort of way in the code to figure out
+    * if it was a student or teacher, which is extra work when this works just fine*/
+    @PostMapping("/register/teacher")
+    public ResponseEntity<String> registerTeacher(@Valid @RequestBody TeacherDTO teacherDTO){
+        return ResponseEntity.ok().body(service.teacherRegistration(teacherDTO));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO or TeacherDTO because we saved them in the User Repo after we converted them into User Entities in their respective classes
+        boolean isValid = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
         if(isValid){
             String token = jwtUtil.generateToken(userDTO.getUsername()); //Generating a token based on the username we are logging in as
             return ResponseEntity.ok //Returns HTTP 200 OK status if log in was successful
                     (Map.of("token", token)); //Creates a one line map like: { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..." }. This is automatically converted to JSON in the HTTP response.
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); //HTTP 401 Unauthorized response if authentication fails
-    }
-
-    @PostMapping("/register/teacher")
-    public ResponseEntity<String> registerTeacher(@Valid @RequestBody TeacherDTO teacherDTO){
-        return ResponseEntity.ok().body(service.teacherRegistration(teacherDTO));
-    }
-
-    @PostMapping("/login/teacher")
-    public ResponseEntity<String> loginTeacher(@RequestBody UserDTO userDTO){
-        boolean isValid = service.teacherLogin(userDTO.getUsername(), userDTO.getPassword());
-        if(isValid){
-            String token = jwtUtil.generateToken(userDTO.getUsername());
-            return ResponseEntity.ok(token);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
 }

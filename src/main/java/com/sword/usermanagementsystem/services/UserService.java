@@ -84,7 +84,7 @@ public class UserService {
     }
 
 
-    public boolean studentLogin(String username, String rawPassword){
+    public boolean login(String username, String rawPassword){
 
         //Check if entered username is present in database
         Optional<User> userOpt = userRepo.findByUsername(username);
@@ -120,16 +120,6 @@ public class UserService {
         teacherRepo.save(teacherEntity);
 
         return "Teacher Registered Successfully";
-    }
-
-    public boolean teacherLogin(String username, String rawPassword){
-        Optional<User> userOpt = userRepo.findByUsername(username);
-        if(userOpt.isEmpty()){
-            return false;
-        }
-
-        String storedHash = userOpt.get().getPassword();
-        return passwordEncoder.matches(rawPassword,storedHash);
     }
 
 }
