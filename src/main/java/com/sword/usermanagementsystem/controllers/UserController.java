@@ -6,10 +6,14 @@ import com.sword.usermanagementsystem.dtos.UserDTO;
 import com.sword.usermanagementsystem.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
+import com.sword.usermanagementsystem.security.JwtUtil;
 
 @RestController
 @RequestMapping("/users")
@@ -17,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     @GetMapping("/all") //PostMapping for receiving data
@@ -42,13 +49,14 @@ public class UserController {
     }
 
     @PostMapping("/login/student")
-    public ResponseEntity<String> loginStudent(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO because we saved the StudentDTO in the User Repo after we converted it into a User Entity
-        boolean isValid = service.studentLogin(userDTO.getUsername(), userDTO.getPassword()); //Calling method from UserService with the object we made called service
+    public ResponseEntity<?> loginStudent(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO because we saved the StudentDTO in the User Repo after we converted it into a User Entity
+        boolean isValid = service.studentLogin(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
         if(isValid){
-            return ResponseEntity.ok().body("Login Successful.");
+            String token = jwtUtil.generateToken(userDTO.getUsername()); //Generating a token based on the username we are logging in as
+            return ResponseEntity.ok //Returns HTTP 200 OK status if log in was successful
+                    (Map.of("token", token)); //Creates a one line map like: { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..." }. This is automatically converted to JSON in the HTTP response.
         }
-        return ResponseEntity.ok().body("Invalid credentials");
-        //Returns one of these two messages based on if the studentLogin in UserService returns true or false
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); //HTTP 401 Unauthorized response if authentication fails
     }
 
     @PostMapping("/register/teacher")
@@ -60,8 +68,9 @@ public class UserController {
     public ResponseEntity<String> loginTeacher(@RequestBody UserDTO userDTO){
         boolean isValid = service.teacherLogin(userDTO.getUsername(), userDTO.getPassword());
         if(isValid){
-            return ResponseEntity.ok().body("Login Successful.");
+            String token = jwtUtil.generateToken(userDTO.getUsername());
+            return ResponseEntity.ok(token);
         }
-        return ResponseEntity.ok().body("Invalid Credentials");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
 }
