@@ -54,7 +54,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<!-- Add the two dependencies below for mapStruct -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -87,7 +86,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-
 		<!-- JWT Dependencies-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -106,6 +104,11 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

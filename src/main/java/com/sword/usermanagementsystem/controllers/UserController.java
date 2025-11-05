@@ -3,17 +3,18 @@ package com.sword.usermanagementsystem.controllers;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.services.JwtService;
 import com.sword.usermanagementsystem.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-
-import com.sword.usermanagementsystem.security.JwtUtil;
 
 @RestController
 @RequestMapping("/users")
@@ -23,7 +24,10 @@ public class UserController {
     private UserService service;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtService;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
 
     @GetMapping("/all") //PostMapping for receiving data
@@ -63,9 +67,12 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO or TeacherDTO because we saved them in the User Repo after we converted them into User Entities in their respective classes
         boolean isValid = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
         if(isValid){
-            String token = jwtUtil.generateToken(userDTO.getUsername()); //Generating a token based on the username we are logging in as
-            return ResponseEntity.ok //Returns HTTP 200 OK status if log in was successful
-                    (Map.of("token", token)); //Creates a one line map like: { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..." }. This is automatically converted to JSON in the HTTP response.
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),userDTO.getPassword()));
+
+            if(authentication.isAuthenticated()){
+                return ResponseEntity.ok().body(jwtService.generateToken(userDTO.getUsername()));
+            }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); //HTTP 401 Unauthorized response if authentication fails
     }

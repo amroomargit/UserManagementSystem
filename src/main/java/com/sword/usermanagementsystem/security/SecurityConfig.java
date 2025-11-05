@@ -1,29 +1,55 @@
 package com.sword.usermanagementsystem.security;
 
+import com.sword.usermanagementsystem.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/*This class registers the JwtFilter into Spring Boot's filter chain so that it runs on every incoming HTTP request
-* before reaching the controller.*/
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
     @Bean
-    /*Registers custom JwtFilter, passing in the existing filter instance as a parameter. The type <JwtFilter> just
-    specifies what kind of filter we’re registering.*/
-    public FilterRegistrationBean<JwtFilter> jwtFilterFilterRegistration(JwtFilter filter){
+    public AuthenticationProvider authProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        return provider;
+    }
 
-        //Creates new registration object that Spring Boot uses to attach filters to web app
-        FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+        http.csrf(customizer -> customizer.disable())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("register","login")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
-        //Attaches JwtFilter to the registration bean. This is what links the JwtFilter class to Spring's web layer
-        registrationBean.setFilter(filter);
-
-        //This means that the filter applies to every request path in the application
-        registrationBean.addUrlPatterns("/*");
-
-        //returns the configuration to Spring, so we can register the filter during startup
-        return registrationBean;
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
     }
 }
