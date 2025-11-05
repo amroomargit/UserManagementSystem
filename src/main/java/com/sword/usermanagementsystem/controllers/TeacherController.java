@@ -5,6 +5,7 @@ import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class TeacherController {
     @Autowired
     private TeacherService service;
 
+    @PreAuthorize("hasRole('TEACHER')")
     @GetMapping("/all")
     /* Only needed teacher controller and not course controller because it was a
     OneToMany relationship, so we were retrieving list from the one teacher object */
@@ -32,6 +34,7 @@ public class TeacherController {
     /* Parameters below are the integers that will be in the search bar, so
      http://localhost:8081/teachers/{teacherId}/topics/{topicId} becomes
      http://localhost:8081/teachers/1/topics/1 */
+    @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/{teacherId}/topics/{topicId}")
     public ResponseEntity<String> topicAssign(@PathVariable int teacherId, @PathVariable int topicId){
         String successMessage = service.assignTopic(teacherId,topicId);

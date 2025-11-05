@@ -4,6 +4,7 @@ import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ public class StudentController {
     @Autowired
     private StudentService service;
 
+    @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/all")
     public ResponseEntity<List<StudentDTO>> getAllStudents(){ //Check doc to see why we return ResponseEntity<>
         var studentReturnVariable = service.getAllStudents(); //studentReturnVariable is needed so we can see in debugger
@@ -29,6 +31,7 @@ public class StudentController {
     (which is why we use @PathVariable, to pull it), and we call the getStudentById method we created in the
     StudentService class to return the DTO associated with that id, by finding the student entity and converting it
     into a DTO, and sending it here, where we return the DTO we got back. */
+    @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("student/{id}")
     public ResponseEntity<StudentDTO> getStudent(@PathVariable int id){
         StudentDTO studentDTO = service.getStudentById(id);

@@ -74,6 +74,7 @@ public class UserService {
 
         //Save to database
         User userEntity = userMapper.toEntity(studentDTO); //StudentDTO class inherits UserDTO class, so a StudentDTO object counts as a UserDTO, and can be saved as a User Entity, so we can enter it into the User Repo later
+        userEntity.setRole("ROLE_STUDENT"); //Setting role to student for access to certain endpoints
         userRepo.save(userEntity); //Converted from DTO to Entity, so we can save in the repo
 
         Student studentEntity = studentMapper.toEntity(studentDTO); //Converting StudentDTO, so we can save Student Entity into Student Repo as well
@@ -113,6 +114,7 @@ public class UserService {
         teacherDTO.setPassword(encodedPassword);
 
         User userEntity = userMapper.toEntity(teacherDTO);
+        userEntity.setRole("ROLE_TEACHER");
         userRepo.save(userEntity);
 
         Teacher teacherEntity = teacherMapper.toEntity(teacherDTO);

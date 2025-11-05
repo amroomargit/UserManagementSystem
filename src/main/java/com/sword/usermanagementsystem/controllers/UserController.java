@@ -3,18 +3,23 @@ package com.sword.usermanagementsystem.controllers;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.entities.User;
+import com.sword.usermanagementsystem.repositories.UserRepository;
 import com.sword.usermanagementsystem.services.JwtService;
 import com.sword.usermanagementsystem.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -29,7 +34,11 @@ public class UserController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    UserRepository userRepo;
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all") //PostMapping for receiving data
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         var userReturnVariable = service.getAllUsers();
@@ -71,7 +80,17 @@ public class UserController {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),userDTO.getPassword()));
 
             if(authentication.isAuthenticated()){
-                return ResponseEntity.ok().body(jwtService.generateToken(userDTO.getUsername()));
+                User userEntity = userRepo.findByUsername(userDTO.getUsername()).orElse(null);
+
+                if(userEntity == null){
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found.");
+                }
+
+                String token = jwtService.generateToken(userEntity);
+                Map<String,String> response = new HashMap<>();
+                response.put("token",token);
+                response.put("role", userEntity.getRole());
+                return ResponseEntity.ok(response);
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); //HTTP 401 Unauthorized response if authentication fails

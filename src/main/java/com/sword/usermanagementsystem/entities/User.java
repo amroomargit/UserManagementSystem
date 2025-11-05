@@ -22,6 +22,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "role")
+    private String role;
+
     //User and Student
     @OneToOne(mappedBy = "user")
     private Student student;
