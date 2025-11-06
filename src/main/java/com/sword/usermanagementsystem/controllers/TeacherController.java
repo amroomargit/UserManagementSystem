@@ -17,7 +17,7 @@ public class TeacherController {
     @Autowired
     private TeacherService service;
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     /* Only needed teacher controller and not course controller because it was a
     OneToMany relationship, so we were retrieving list from the one teacher object */
@@ -34,6 +34,7 @@ public class TeacherController {
     /* Parameters below are the integers that will be in the search bar, so
      http://localhost:8081/teachers/{teacherId}/topics/{topicId} becomes
      http://localhost:8081/teachers/1/topics/1 */
+
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/{teacherId}/topics/{topicId}")
     public ResponseEntity<String> topicAssign(@PathVariable int teacherId, @PathVariable int topicId){

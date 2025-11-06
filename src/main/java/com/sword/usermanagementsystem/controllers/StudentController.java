@@ -19,7 +19,7 @@ public class StudentController {
     @Autowired
     private StudentService service;
 
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<StudentDTO>> getAllStudents(){ //Check doc to see why we return ResponseEntity<>
         var studentReturnVariable = service.getAllStudents(); //studentReturnVariable is needed so we can see in debugger

@@ -85,22 +85,34 @@ public class UserService {
     }
 
 
-    public boolean login(String username, String rawPassword){
+    public UserDTO login(String username, String rawPassword){
 
         //Check if entered username is present in database
         Optional<User> userOpt = userRepo.findByUsername(username);
         if(userOpt.isEmpty()){
-            return false;
+            return null;
         }
 
-
         //Compare raw password with stored hash
-
         /*We pulled the UserDTO (which is what we stored at the end of the studentRegistration method) from the
         database when we called userOpt above to check if the username is present, so here, we are getting the password from
         that UserDTO where we found the username stored in*/
         String storedHash = userOpt.get().getPassword();
-        return passwordEncoder.matches(rawPassword,storedHash);
+        boolean var =  passwordEncoder.matches(rawPassword,storedHash);
+
+        if(var == false){
+            return null;
+        }
+
+        UserDTO dto = userMapper.toDTO(userOpt.get());
+        if (userOpt.get().getStudent() == null){
+            StudentDTO studentDTO = studentMapper.toDTO(userOpt.get().getStudent());
+            return studentDTO;
+        }
+
+
+
+        return dto;
     }
 
 
