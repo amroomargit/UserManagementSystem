@@ -44,5 +44,7 @@ public class Course {
     @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "courseid") /*FK to course*/, inverseJoinColumns = @JoinColumn(name = "studentid")/*FK to student*/)
     private List<Student> students;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Certificate> certificates;
 
 }

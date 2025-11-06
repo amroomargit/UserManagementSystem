@@ -39,4 +39,7 @@ public class Student {
     @JoinColumn(name = "userid", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Certificate> certificates;
+
 }
