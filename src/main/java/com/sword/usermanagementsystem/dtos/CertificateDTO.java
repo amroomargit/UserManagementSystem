@@ -13,6 +13,6 @@ public class CertificateDTO {
     private float grade;
     private String certificateType;
 
-    private StudentDTO studentEntity;
-    private CourseDTO courseEntity;
+    private StudentDTO student;
+    private CourseDTO course;
 }

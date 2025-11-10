@@ -18,5 +18,5 @@ public class StudentDTO extends UserDTO{ //StudentDTO inherits UserDTO so we can
 
     private UserDTO user; //refer to parent of student by its name
 
-    private List<CertificateDTO> certificates;
+    private List<CertificateDTO> certificateList;
 }

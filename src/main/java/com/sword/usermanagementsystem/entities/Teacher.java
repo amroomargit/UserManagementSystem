@@ -31,6 +31,7 @@ public class Teacher {
     @JoinColumn(name = "userid", referencedColumnName = "id")
     private User user;
 
+
     //Teacher and Topic
     @ManyToMany
     @JoinTable(name = "teacher_topic", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "topic_id"))

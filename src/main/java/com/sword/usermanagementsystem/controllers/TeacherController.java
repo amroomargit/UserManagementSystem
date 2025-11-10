@@ -12,12 +12,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/teachers")
+@PreAuthorize("hasRole('ADMIN')")
 public class TeacherController {
 
     @Autowired
     private TeacherService service;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     /* Only needed teacher controller and not course controller because it was a
     OneToMany relationship, so we were retrieving list from the one teacher object */

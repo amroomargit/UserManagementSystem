@@ -43,13 +43,13 @@ public class CertificateService {
             //Map associated course
             if(certificate.getCourse() != null){
                 var courseDTO = courseMapper.toDTO(certificate.getCourse());
-                certificateDTO.setCourseEntity(courseDTO);
+                certificateDTO.setCourse(courseDTO);
             }
 
             //Map associated student
             if(certificate.getStudent() != null){
                 var studentDTO = studentMapper.toDTO(certificate.getStudent());
-                certificateDTO.setStudentEntity(studentDTO);
+                certificateDTO.setStudent(studentDTO);
             }
 
             result.add(certificateDTO);

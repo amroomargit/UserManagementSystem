@@ -1,14 +1,18 @@
 package com.sword.usermanagementsystem.services;
 
+import com.sword.usermanagementsystem.dtos.AdminDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.entities.Admin;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.User;
+import com.sword.usermanagementsystem.mappers.AdminMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
+import com.sword.usermanagementsystem.repositories.AdminRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
 import com.sword.usermanagementsystem.repositories.TeacherRepository;
 import com.sword.usermanagementsystem.repositories.UserRepository;
@@ -44,6 +48,12 @@ public class UserService {
 
     @Autowired
     TeacherRepository teacherRepo;
+
+    @Autowired
+    AdminRepository adminRepo;
+
+    @Autowired
+    AdminMapper adminMapper;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -105,12 +115,21 @@ public class UserService {
         }
 
         UserDTO dto = userMapper.toDTO(userOpt.get());
-        if (userOpt.get().getStudent() == null){
+        if (userOpt.get().getStudent() != null) {
             StudentDTO studentDTO = studentMapper.toDTO(userOpt.get().getStudent());
+            studentDTO.setUsername(dto.getUsername());
             return studentDTO;
         }
-
-
+        if (userOpt.get().getTeacher() != null) {
+            TeacherDTO teacherDTO = teacherMapper.toDTO(userOpt.get().getTeacher());
+            teacherDTO.setUsername(dto.getUsername());
+            return teacherDTO;
+        }
+        if (userOpt.get().getAdmin() != null) {
+            AdminDTO adminDTO = adminMapper.toDTO(userOpt.get().getAdmin());
+            adminDTO.setUsername(dto.getUsername());
+            return adminDTO;
+        }
 
         return dto;
     }
@@ -134,6 +153,26 @@ public class UserService {
         teacherRepo.save(teacherEntity);
 
         return "Teacher Registered Successfully";
+    }
+
+    @Transactional
+    public String adminRegistration(AdminDTO adminDTO){
+        if(userRepo.findByUsername(adminDTO.getUsername()).isPresent()){
+            return "Username Already Taken.";
+        }
+
+        String encodedPassword = passwordEncoder.encode(adminDTO.getPassword());
+        adminDTO.setPassword(encodedPassword);
+
+        User userEntity = userMapper.toEntity(adminDTO);
+        userEntity.setRole("ROLE_ADMIN");
+        userRepo.save(userEntity);
+
+        Admin adminEntity = adminMapper.toEntity(adminDTO);
+        adminEntity.setUser(userEntity);
+        adminRepo.save(adminEntity);
+
+        return "Admin Registered Successfully";
     }
 
 }

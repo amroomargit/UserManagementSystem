@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.AdminDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.UserDTO;
@@ -37,7 +38,6 @@ public class UserController {
     @Autowired
     UserRepository userRepo;
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all") //PostMapping for receiving data
     public ResponseEntity<List<UserDTO>> getAllUsers(){
@@ -71,11 +71,16 @@ public class UserController {
         return ResponseEntity.ok().body(service.teacherRegistration(teacherDTO));
     }
 
+    @PostMapping("/register/admin")
+    public ResponseEntity<String> registerAdmin(@Valid @RequestBody AdminDTO adminDTO){
+        return ResponseEntity.ok().body(service.adminRegistration(adminDTO));
+    }
+
     @PostMapping("/login")
     //Return type is generic ? because now several responses could be returned, an error, a pass, a string, etc.
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO or TeacherDTO because we saved them in the User Repo after we converted them into User Entities in their respective classes
-        UserDTO studentOrTeacher = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
-        if(studentOrTeacher != null){
+        UserDTO user = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
+        if(user != null){
 
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),userDTO.getPassword()));
 

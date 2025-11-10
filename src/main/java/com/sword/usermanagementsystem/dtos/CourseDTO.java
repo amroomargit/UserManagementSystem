@@ -25,6 +25,6 @@ public class CourseDTO {
     //Reference to StudentDTO for the ManyToMany between course and student
     private List<StudentDTO> studentList;
 
-    private List<CertificateDTO> certificates;
+    private List<CertificateDTO> certificateList;
 
 }

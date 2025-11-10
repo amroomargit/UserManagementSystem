@@ -30,5 +30,7 @@ public class UserDTO {
 
     private TeacherDTO teacherEntity; //change name of child of user (studentEntity, not student) to avoid circular reference
 
+    private AdminDTO adminEntity;
+
 
 }
