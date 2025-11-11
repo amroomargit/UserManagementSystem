@@ -22,12 +22,14 @@ public class Course {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "starttime")
     private LocalDateTime starttime;
 
     @Column(name = "endtime")
     private LocalDateTime endtime;
-
 
     //ManyToOne between course and teacher
     @ManyToOne(cascade = CascadeType.ALL)

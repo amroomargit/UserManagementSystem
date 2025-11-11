@@ -13,6 +13,7 @@ import java.util.List;
 public class CourseDTO {
 
     private int id;
+    private String name;
     private LocalDateTime starttime;
     private LocalDateTime endtime;
 
