@@ -14,6 +14,7 @@ import com.sword.usermanagementsystem.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,11 @@ public class TeacherService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    UserService service;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public List<TeacherDTO> getAllTeachers(){ //OneToMany so we only needed TeacherService, not CourseService
@@ -87,17 +93,10 @@ public class TeacherService {
         return "Topic Assigned To Teacher Successfully.";
     }
 
-    public String insertTeacher(TeacherDTO teacherDTO){
-        String newUsersUsername = teacherDTO.getUsername();
-        String existingUsernameCheck = userRepo.findByUsername(newUsersUsername).get().getUsername();
-
-        if(newUsersUsername.equals(existingUsernameCheck)){
-            return "Username already taken.";
-        }
-
-        userRepo.save(userMapper.toEntity(teacherDTO));
-        return "Teacher has been successfully added to database.";
+    public String insertTeacher(TeacherDTO teacherDTO) {
+        return service.teacherRegistration(teacherDTO);
     }
+
 
     public String updateTeacherInfo(int teacherId, String newName){
         Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
