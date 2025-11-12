@@ -42,4 +42,21 @@ public class TeacherController {
         return ResponseEntity.ok().body(successMessage);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/insert-teacher")
+    public ResponseEntity<String> insertTeacher(@RequestBody TeacherDTO teacherDTO){
+        return ResponseEntity.ok().body(service.insertTeacher(teacherDTO));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/update-teacher-info/{teacherId}")
+    public ResponseEntity<String> updateTeacherInfo(@PathVariable int teacherId, @RequestBody String newName){
+        return ResponseEntity.ok().body(service.updateTeacherInfo(teacherId,newName));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete-teacher/{teacherId}")
+    public ResponseEntity<String> deleteTeacher(@PathVariable int teacherId){
+        return ResponseEntity.ok().body(service.deleteTeacher(teacherId));
+    }
 }

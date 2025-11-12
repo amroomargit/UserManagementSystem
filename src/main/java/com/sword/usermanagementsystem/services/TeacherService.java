@@ -4,10 +4,13 @@ import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
+import com.sword.usermanagementsystem.entities.User;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
+import com.sword.usermanagementsystem.mappers.UserMapper;
 import com.sword.usermanagementsystem.repositories.TeacherRepository;
 import com.sword.usermanagementsystem.repositories.TopicRepository;
+import com.sword.usermanagementsystem.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeacherService {
@@ -31,6 +35,12 @@ public class TeacherService {
 
     @Autowired
     CourseMapper courseMapper;
+
+    @Autowired
+    UserRepository userRepo;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Transactional
     public List<TeacherDTO> getAllTeachers(){ //OneToMany so we only needed TeacherService, not CourseService
@@ -75,5 +85,40 @@ public class TeacherService {
 
         //Return a success message, and if you want to view the changes we just made, check the teacher_topic join table
         return "Topic Assigned To Teacher Successfully.";
+    }
+
+    public String insertTeacher(TeacherDTO teacherDTO){
+        String newUsersUsername = teacherDTO.getUsername();
+        String existingUsernameCheck = userRepo.findByUsername(newUsersUsername).get().getUsername();
+
+        if(newUsersUsername.equals(existingUsernameCheck)){
+            return "Username already taken.";
+        }
+
+        userRepo.save(userMapper.toEntity(teacherDTO));
+        return "Teacher has been successfully added to database.";
+    }
+
+    public String updateTeacherInfo(int teacherId, String newName){
+        Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
+
+        if(findTeacher.isPresent()){
+            System.out.println(findTeacher.get().getName());
+            findTeacher.get().setName(newName);
+            System.out.println(findTeacher.get().getName());
+            return "Teacher updated successfully";
+        }
+
+        return "Unsuccessful update.";
+    }
+
+    public String deleteTeacher(int teacherId){
+        Optional<Teacher> teacher = teacherRepo.findById(teacherId);
+
+        if(teacher.isPresent()){
+            teacherRepo.deleteById(teacherId);
+            return "Teacher successfully deleted from teacher and users, course, and teacher_topic tables.";
+        }
+        return "Unsuccessful deletion.";
     }
 }

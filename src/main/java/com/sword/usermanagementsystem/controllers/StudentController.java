@@ -31,7 +31,7 @@ public class StudentController {
     (which is why we use @PathVariable, to pull it), and we call the getStudentById method we created in the
     StudentService class to return the DTO associated with that id, by finding the student entity and converting it
     into a DTO, and sending it here, where we return the DTO we got back. */
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT','ADMIN')")
     @GetMapping("student/{id}")
     public ResponseEntity<StudentDTO> getStudent(@PathVariable int id){
         StudentDTO studentDTO = service.getStudentById(id);

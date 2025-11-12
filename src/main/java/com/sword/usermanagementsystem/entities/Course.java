@@ -33,11 +33,11 @@ public class Course {
 
     //ManyToOne between course and teacher
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacherid", referencedColumnName = "id" /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/) //The JoinColumn connects primary and foreign keys
+    @JoinColumn(name = "teacherid", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_teacher", foreignKeyDefinition = "FOREIGN KEY (teacherid) REFERENCES teacher(id) ON DELETE CASCADE") /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/) //The JoinColumn connects primary and foreign keys
     private Teacher teacher;
 
     //ManyToOne between course and topic
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "topicid", referencedColumnName = "id")
     private Topic topic;
 

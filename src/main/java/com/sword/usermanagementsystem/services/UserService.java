@@ -1,9 +1,6 @@
 package com.sword.usermanagementsystem.services;
 
-import com.sword.usermanagementsystem.dtos.AdminDTO;
-import com.sword.usermanagementsystem.dtos.StudentDTO;
-import com.sword.usermanagementsystem.dtos.TeacherDTO;
-import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.dtos.*;
 import com.sword.usermanagementsystem.entities.Admin;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.Teacher;
@@ -94,7 +91,7 @@ public class UserService {
         return "Student Registered Successfully.";
     }
 
-
+    @Transactional
     public UserDTO login(String username, String rawPassword){
 
         //Check if entered username is present in database
@@ -175,4 +172,14 @@ public class UserService {
         return "Admin Registered Successfully";
     }
 
+    @Transactional
+    public String changePassword(int userId, ChangePasswordDTO changePasswordDTO){
+        Optional<User> currentUser = userRepo.findById(userId);
+
+        if(passwordEncoder.matches(currentUser.get().getPassword(),changePasswordDTO.getOldPassword())){
+            currentUser.get().setPassword(changePasswordDTO.getNewPassword());
+            return "Successful Password Change.";
+        }
+        return "Unsuccessful Password Change.";
+    }
 }

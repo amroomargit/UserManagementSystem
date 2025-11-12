@@ -1,9 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
-import com.sword.usermanagementsystem.dtos.AdminDTO;
-import com.sword.usermanagementsystem.dtos.StudentDTO;
-import com.sword.usermanagementsystem.dtos.TeacherDTO;
-import com.sword.usermanagementsystem.dtos.UserDTO;
+import com.sword.usermanagementsystem.dtos.*;
 import com.sword.usermanagementsystem.entities.User;
 import com.sword.usermanagementsystem.repositories.UserRepository;
 import com.sword.usermanagementsystem.services.JwtService;
@@ -99,5 +96,11 @@ public class UserController {
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"); //HTTP 401 Unauthorized response if authentication fails
+    }
+
+    @PatchMapping("/change-password/{userId}")
+    @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
+    public ResponseEntity<String> changePassword(@PathVariable int userId, @RequestBody ChangePasswordDTO changePasswordDTO){
+        return ResponseEntity.ok().body(service.changePassword(userId, changePasswordDTO));
     }
 }
