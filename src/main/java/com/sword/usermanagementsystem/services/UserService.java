@@ -176,8 +176,8 @@ public class UserService {
     public String changePassword(int userId, ChangePasswordDTO changePasswordDTO){
         Optional<User> currentUser = userRepo.findById(userId);
 
-        if(passwordEncoder.matches(currentUser.get().getPassword(),changePasswordDTO.getOldPassword())){
-            currentUser.get().setPassword(changePasswordDTO.getNewPassword());
+        if(passwordEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.get().getPassword())){
+            currentUser.get().setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
             return "Successful Password Change.";
         }
         return "Unsuccessful Password Change.";

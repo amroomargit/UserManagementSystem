@@ -37,7 +37,9 @@ public class Course {
     private Teacher teacher;
 
     //ManyToOne between course and topic
-    @ManyToOne
+    @ManyToOne /*No cascading here because it causes an issue when deleting a teacher if there is a row in course table
+    that links teacher, topic and course, causing the topic to delete from its own table entirely. This only happens
+    with ManyToMany relationships */
     @JoinColumn(name = "topicid", referencedColumnName = "id")
     private Topic topic;
 
