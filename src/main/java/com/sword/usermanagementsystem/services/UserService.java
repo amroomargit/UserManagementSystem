@@ -1,19 +1,13 @@
 package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.*;
-import com.sword.usermanagementsystem.entities.Admin;
-import com.sword.usermanagementsystem.entities.Student;
-import com.sword.usermanagementsystem.entities.Teacher;
-import com.sword.usermanagementsystem.entities.User;
+import com.sword.usermanagementsystem.entities.*;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.AdminMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
-import com.sword.usermanagementsystem.repositories.AdminRepository;
-import com.sword.usermanagementsystem.repositories.StudentRepository;
-import com.sword.usermanagementsystem.repositories.TeacherRepository;
-import com.sword.usermanagementsystem.repositories.UserRepository;
+import com.sword.usermanagementsystem.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -53,6 +47,9 @@ public class UserService {
     @Autowired
     AdminMapper adminMapper;
 
+    @Autowired
+    CourseRepository courseRepo;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -86,6 +83,16 @@ public class UserService {
         userRepo.save(userEntity); //Converted from DTO to Entity, so we can save in the repo
 
         Student studentEntity = studentMapper.toEntity(studentDTO); //Converting StudentDTO, so we can save Student Entity into Student Repo as well
+
+        //Reading courses that the student is registered in, and saving those so that they show up in the database jointable
+        List<Course> courseEntities = new ArrayList<Course>();
+        for(CourseDTO dto : studentDTO.getCourses()){
+            Course c = courseRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Course not found: "+dto.getId()));
+            c.getStudents().add(studentEntity);
+            courseEntities.add(c);
+        }
+        studentEntity.setCourses(courseEntities);
+
         studentEntity.setUser(userEntity); //Able to setUser because user is an instance variable in the Student class from when we made the OneToOne relationship with User class
         studentRepo.save(studentEntity); //Save into student repo as well
 

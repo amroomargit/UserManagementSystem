@@ -54,7 +54,7 @@ public class UserController {
     MethodArgumentNotValidException. Your GlobalExceptionHandler or Spring’s default error handler returns an automatic
     HTTP 400 response with details. */
     @PostMapping("/register/student") //PostMapping for submitting data (like registering a new user)
-    public ResponseEntity<String> registerStudent(@Valid @RequestBody StudentDTO studentDTO){ //Check doc to see why we return ResponseEntity<>
+    public ResponseEntity<StudentDTO> registerStudent(@Valid @RequestBody StudentDTO studentDTO){ //Check doc to see why we return ResponseEntity<>
         return ResponseEntity.ok().body(service.studentRegistration(studentDTO)); //Calling method from UserService with the object we made called service
     }
 

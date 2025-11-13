@@ -36,11 +36,11 @@ public class StudentService {
         for(var student:students){
             var courses = student.getCourses();
             var studentDTO = studentMapper.toDTO(student);
-            studentDTO.setCourseList(new ArrayList<CourseDTO>());
+            studentDTO.setCourses(new ArrayList<CourseDTO>());
 
             for(var course:courses){
                 var courseDTO  = courseMapper.toDTO(course);
-                studentDTO.getCourseList().add(courseDTO);
+                studentDTO.getCourses().add(courseDTO);
 
             }
             result.add(studentDTO);
