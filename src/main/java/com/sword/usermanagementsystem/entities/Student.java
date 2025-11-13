@@ -34,13 +34,14 @@ public class Student {
     @ManyToMany(mappedBy = "students") //"students" because that's the list name in Course class
     private List<Course> courses; //List for Many to Many, not just regular object like Many To One
 
+    //Student and Certificate
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Certificate> certificates;
+
+
     //Student and User
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "userid", referencedColumnName = "id")
     private User user;
-
-
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Certificate> certificates;
 
 }

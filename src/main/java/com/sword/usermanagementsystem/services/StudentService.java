@@ -71,11 +71,36 @@ public class StudentService {
     public StudentDTO updateStudentInfo(int studentId, StudentDTO studentDTO){
         Optional<Student> findStudent = studentRepo.findById(studentId);
 
-        if(findStudent.isPresent()){
-            Student studentEntity = service.studentEntityHelper(studentDTO);
-            studentRepo.save(studentEntity);
+        if(findStudent.isPresent()) {
+            if (findStudent.get().getFirstname()!=null){
+                findStudent.get().setFirstname(studentDTO.getFirstname());
+            }
+
+            if (findStudent.get().getLastname()!=null){
+                findStudent.get().setLastname(studentDTO.getLastname());
+            }
+
+            if (findStudent.get().getCourses()!=null){
+
+            }
+
+            if (findStudent.get().getCertificates()!=null){
+
+            }
+
+            return studentMapper.toDTO(findStudent.get());
         }
+
         throw new BusinessException("Unsuccessful Update.");
+    }
+
+    public String deleteStudent(int studentId){
+        Optional<Student> findStudent = studentRepo.findById(studentId);
+        if(findStudent.isPresent()){
+            studentRepo.deleteById(studentId);
+            return "Student: "+ studentId +" has been successfully deleted from student and users, certificate, course and course_student tables.";
+        }
+        throw new BusinessException("Unsuccessful Deletion.");
     }
 
 }

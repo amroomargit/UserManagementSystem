@@ -50,6 +50,9 @@ public class UserService {
     @Autowired
     CourseRepository courseRepo;
 
+    @Autowired
+    CertificateRepository certificateRepo;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -90,19 +93,31 @@ public class UserService {
         return studentDTO;
     }
 
+    //Separate helper method because we use it in insertStudent in StudentService as well
     public Student studentEntityHelper(StudentDTO studentDTO){
 
         Student studentEntity = studentMapper.toEntity(studentDTO);
 
         //Reading courses that the student is registered in, and saving those so that they show up in the database jointable
         List<Course> courseEntities = new ArrayList<Course>();
-        for(CourseDTO dto : studentDTO.getCourses()){
-            Course c = courseRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Course not found: "+dto.getId()));
-            c.getStudents().add(studentEntity);
-            courseEntities.add(c);
+        if(studentDTO.getCourses() != null){ //if there are any courses to be registered in, in the first place
+            for(CourseDTO dto : studentDTO.getCourses()){
+                Course c = courseRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Course not found: "+dto.getId()));
+                c.getStudents().add(studentEntity);
+                courseEntities.add(c);
+            }
+            studentEntity.setCourses(courseEntities);
         }
 
-        studentEntity.setCourses(courseEntities);
+        List<Certificate> certificateEntities = new ArrayList<Certificate>();
+        if(studentDTO.getCertificateList() != null){ //if there are any courses to be registered in, in the first place
+            for(CertificateDTO dto : studentDTO.getCertificateList()){
+                Certificate c = certificateRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Certificate not found: "+dto.getId()));
+                c.getStudents().add(studentEntity);
+                courseEntities.add(c);
+            }
+            studentEntity.setCourses(courseEntities);
+        }
 
         return studentEntity;
     }

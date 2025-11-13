@@ -42,6 +42,7 @@ public class Course {
     with ManyToMany relationships */
     @JoinColumn(name = "topicid", referencedColumnName = "id")
     private Topic topic;
+    //Cascading allowed on child side though, so there is in topic entity class
 
     //ManyToMany between course and student
     @ManyToMany //mappedBy should only be on one side (the inverse side, so Course class)

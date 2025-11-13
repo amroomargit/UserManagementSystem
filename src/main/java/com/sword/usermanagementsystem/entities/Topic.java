@@ -22,7 +22,7 @@ public class Topic {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true) //Cascading allowed on child side
     private List<Course> courses;
 
     @ManyToMany(mappedBy = "topics")

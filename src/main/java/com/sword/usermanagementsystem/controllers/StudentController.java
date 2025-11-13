@@ -55,4 +55,10 @@ public class StudentController {
     public ResponseEntity<StudentDTO> updateStudentInfo(@PathVariable int studentId, @RequestBody StudentDTO studentDTO){
         return ResponseEntity.ok().body(service.updateStudentInfo(studentId, studentDTO));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete-student/{studentId}")
+    public ResponseEntity<String> deleteStudent(@PathVariable int studentId){
+        return ResponseEntity.ok().body(service.deleteStudent(studentId));
+    }
 }

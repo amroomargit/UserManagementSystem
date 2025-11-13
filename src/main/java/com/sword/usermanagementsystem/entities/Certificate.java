@@ -25,7 +25,10 @@ public class Certificate {
     @JoinColumn(name = "studentid", referencedColumnName = "id")
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne /*No cascading here because it causes an issue when deleting a student if there is a row in certificate table
+    that links student, course and certificate, causing the topic to delete from its own table entirely. This only happens
+    with ManyToMany relationships */
     @JoinColumn(name = "courseid", referencedColumnName = "id")
     private Course course;
+    //Cascading allowed on child side, so there is in course entity class
 }
