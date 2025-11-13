@@ -44,14 +44,14 @@ public class TeacherController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/insert-teacher")
-    public ResponseEntity<String> insertTeacher(@RequestBody TeacherDTO teacherDTO){
+    public ResponseEntity<TeacherDTO> insertTeacher(@RequestBody TeacherDTO teacherDTO){
         return ResponseEntity.ok().body(service.insertTeacher(teacherDTO));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/update-teacher-info/{teacherId}")
-    public ResponseEntity<String> updateTeacherInfo(@PathVariable int teacherId, @RequestBody String newName){
-        return ResponseEntity.ok().body(service.updateTeacherInfo(teacherId,newName));
+    public ResponseEntity<TeacherDTO> updateTeacherInfo(@PathVariable int teacherId, @RequestBody TeacherDTO teacherDTO){
+        return ResponseEntity.ok().body(service.updateTeacherInfo(teacherId,teacherDTO));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

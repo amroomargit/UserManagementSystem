@@ -64,7 +64,7 @@ public class UserController {
     * but if we made the register centralized, we would have to include some other sort of way in the code to figure out
     * if it was a student or teacher, which is extra work when this works just fine*/
     @PostMapping("/register/teacher")
-    public ResponseEntity<String> registerTeacher(@Valid @RequestBody TeacherDTO teacherDTO){
+    public ResponseEntity<TeacherDTO> registerTeacher(@Valid @RequestBody TeacherDTO teacherDTO){
         return ResponseEntity.ok().body(service.teacherRegistration(teacherDTO));
     }
 

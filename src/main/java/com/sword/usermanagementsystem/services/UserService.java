@@ -5,6 +5,7 @@ import com.sword.usermanagementsystem.entities.Admin;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.User;
+import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.AdminMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
@@ -66,11 +67,11 @@ public class UserService {
 
 
     @Transactional
-    public String studentRegistration(StudentDTO studentDTO){
+    public StudentDTO studentRegistration(StudentDTO studentDTO){
 
         //check if username is already taken
         if(userRepo.findByUsername(studentDTO.getUsername()).isPresent()){
-            return "Username Already Taken";
+            throw new BusinessException("Username already taken.");
             /*No loop prompting for another attempt because Spring Boot REST API is stateless, no ongoing input/output
             loop. Backend should not be waiting for another input, instead, the frontend will try a new prompt.*/
         }
@@ -88,7 +89,7 @@ public class UserService {
         studentEntity.setUser(userEntity); //Able to setUser because user is an instance variable in the Student class from when we made the OneToOne relationship with User class
         studentRepo.save(studentEntity); //Save into student repo as well
 
-        return "Student Registered Successfully.";
+        return studentDTO;
     }
 
     @Transactional
@@ -133,9 +134,9 @@ public class UserService {
 
 
     @Transactional
-    public String teacherRegistration(TeacherDTO teacherDTO){
+    public TeacherDTO teacherRegistration(TeacherDTO teacherDTO){
         if(userRepo.findByUsername(teacherDTO.getUsername()).isPresent()){
-            return "Username Already Taken.";
+            throw new BusinessException("Username taken.");
         }
 
         String encodedPassword = passwordEncoder.encode(teacherDTO.getPassword());
@@ -149,7 +150,7 @@ public class UserService {
         teacherEntity.setUser(userEntity);
         teacherRepo.save(teacherEntity);
 
-        return "Teacher Registered Successfully";
+        return teacherDTO;
     }
 
     @Transactional

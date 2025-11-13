@@ -24,6 +24,9 @@ public class StudentService {
     @Autowired
     CourseMapper courseMapper;
 
+    @Autowired
+    UserService service;
+
     //ManyToMany between courses and students
     @Transactional
     public List<StudentDTO> getAllStudents(){
@@ -58,5 +61,8 @@ public class StudentService {
         return studentMapper.toDTO(student);
     }
 
+    public StudentDTO insertStudent(StudentDTO studentDTO){
+        return service.studentRegistration(studentDTO);
+    }
 
 }

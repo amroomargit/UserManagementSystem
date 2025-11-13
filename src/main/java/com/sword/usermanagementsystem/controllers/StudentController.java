@@ -5,10 +5,7 @@ import com.sword.usermanagementsystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +35,6 @@ public class StudentController {
         return ResponseEntity.ok().body(studentDTO);
     }
 
-
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
     can fetch all Courses indirectly through /teachers/all. Now, with Many-to-Many (Student ↔ Student), neither side
     owns the other, they’re equal. You have to choose one to expose first.
@@ -46,4 +42,12 @@ public class StudentController {
     StudentService and StudentController, were chosen purely as a test entry point (no deeper reason). It’s arbitrary,
     you could have picked Topic instead.
     */
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/new-student")
+    public ResponseEntity<StudentDTO> insertStudent(@RequestBody StudentDTO studentDTO){
+        return ResponseEntity.ok().body(service.insertStudent(studentDTO));
+    }
+    
 }

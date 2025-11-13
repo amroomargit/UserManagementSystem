@@ -5,6 +5,7 @@ import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
 import com.sword.usermanagementsystem.entities.User;
+import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
@@ -70,6 +71,7 @@ public class TeacherService {
         return result;
     }
 
+    @Transactional
     //This method assigns an existing Topic to the Topic list in the Teacher Entity we specify
     public String assignTopic(int teacherId, int topicId){
 
@@ -93,24 +95,24 @@ public class TeacherService {
         return "Topic Assigned To Teacher Successfully.";
     }
 
-    public String insertTeacher(TeacherDTO teacherDTO) {
+    @Transactional
+    public TeacherDTO insertTeacher(TeacherDTO teacherDTO) {
         return service.teacherRegistration(teacherDTO);
     }
 
-
-    public String updateTeacherInfo(int teacherId, String newName){
+    @Transactional
+    public TeacherDTO updateTeacherInfo(int teacherId, TeacherDTO teacherDTO){
         Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
 
         if(findTeacher.isPresent()){
-            System.out.println(findTeacher.get().getName());
-            findTeacher.get().setName(newName);
-            System.out.println(findTeacher.get().getName());
-            return "Teacher updated successfully";
+            findTeacher.get().setName(teacherDTO.getName());
+            return teacherMapper.toDTO(findTeacher.get());
         }
 
-        return "Unsuccessful update.";
+        throw new BusinessException("Unsuccessful Update.");
     }
 
+    @Transactional
     public String deleteTeacher(int teacherId){
         Optional<Teacher> teacher = teacherRepo.findById(teacherId);
 
@@ -118,6 +120,7 @@ public class TeacherService {
             teacherRepo.deleteById(teacherId);
             return "Teacher successfully deleted from teacher and users, course, and teacher_topic tables.";
         }
-        return "Unsuccessful deletion.";
+
+        throw new BusinessException("Unsuccessful Deletion.");
     }
 }
