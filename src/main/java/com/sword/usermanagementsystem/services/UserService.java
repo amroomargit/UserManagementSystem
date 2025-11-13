@@ -111,12 +111,21 @@ public class UserService {
 
         List<Certificate> certificateEntities = new ArrayList<Certificate>();
         if(studentDTO.getCertificateList() != null){ //if there are any courses to be registered in, in the first place
-            for(CertificateDTO dto : studentDTO.getCertificateList()){
-                Certificate c = certificateRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Certificate not found: "+dto.getId()));
-                c.getStudents().add(studentEntity);
-                courseEntities.add(c);
+            for(CertificateDTO dto: studentDTO.getCertificateList()){
+                Certificate c = new Certificate();
+                c.setGrade(dto.getGrade());
+                c.setCertificateType(dto.getCertificateType());
+
+                if(dto.getCourse() != null && dto.getCourse().getId() != 0){
+                    Course course = courseRepo.findById(dto.getCourse().getId()).orElseThrow(() -> new BusinessException(
+                            "Course not found: " + dto.getCourse().getId()));
+                    c.setCourse(course);
+                }
+
+                c.setStudent(studentEntity);
+                certificateEntities.add(c);
             }
-            studentEntity.setCourses(courseEntities);
+            studentEntity.setCertificates(certificateEntities);
         }
 
         return studentEntity;

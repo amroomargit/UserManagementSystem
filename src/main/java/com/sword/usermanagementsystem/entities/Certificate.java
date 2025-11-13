@@ -1,6 +1,8 @@
 package com.sword.usermanagementsystem.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -15,13 +17,15 @@ public class Certificate {
     @Column(name = "id")
     private int id;
 
+    @NotNull
     @Column(name = "grade")
     private float grade;
 
+    @NotBlank
     @Column(name = "certificatetype")
     private String certificateType;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne //Cascading here would delete the student if we ever delete the certificate
     @JoinColumn(name = "studentid", referencedColumnName = "id")
     private Student student;
 
