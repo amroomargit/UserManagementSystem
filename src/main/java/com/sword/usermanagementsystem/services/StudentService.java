@@ -2,7 +2,9 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
+import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.entities.Student;
+import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -63,6 +66,16 @@ public class StudentService {
 
     public StudentDTO insertStudent(StudentDTO studentDTO){
         return service.studentRegistration(studentDTO);
+    }
+
+    public StudentDTO updateStudentInfo(int studentId, StudentDTO studentDTO){
+        Optional<Student> findStudent = studentRepo.findById(studentId);
+
+        if(findStudent.isPresent()){
+            Student studentEntity = service.studentEntityHelper(studentDTO);
+            studentRepo.save(studentEntity);
+        }
+        throw new BusinessException("Unsuccessful Update.");
     }
 
 }

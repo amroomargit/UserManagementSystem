@@ -82,7 +82,17 @@ public class UserService {
         userEntity.setRole("ROLE_STUDENT"); //Setting role to student for access to certain endpoints
         userRepo.save(userEntity); //Converted from DTO to Entity, so we can save in the repo
 
-        Student studentEntity = studentMapper.toEntity(studentDTO); //Converting StudentDTO, so we can save Student Entity into Student Repo as well
+        Student studentEntity = studentEntityHelper(studentDTO);
+
+        studentEntity.setUser(userEntity); //Able to setUser because user is an instance variable in the Student class from when we made the OneToOne relationship with User class
+        studentRepo.save(studentEntity); //Save into student repo as well
+
+        return studentDTO;
+    }
+
+    public Student studentEntityHelper(StudentDTO studentDTO){
+
+        Student studentEntity = studentMapper.toEntity(studentDTO);
 
         //Reading courses that the student is registered in, and saving those so that they show up in the database jointable
         List<Course> courseEntities = new ArrayList<Course>();
@@ -91,13 +101,12 @@ public class UserService {
             c.getStudents().add(studentEntity);
             courseEntities.add(c);
         }
+
         studentEntity.setCourses(courseEntities);
 
-        studentEntity.setUser(userEntity); //Able to setUser because user is an instance variable in the Student class from when we made the OneToOne relationship with User class
-        studentRepo.save(studentEntity); //Save into student repo as well
-
-        return studentDTO;
+        return studentEntity;
     }
+
 
     @Transactional
     public UserDTO login(String username, String rawPassword){
