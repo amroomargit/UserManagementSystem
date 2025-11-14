@@ -13,9 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # this line allows Spring Data JPA to automatically create your tables based on your @Entity
-      #classes. INSTEAD of coding it manually in DataGrip using traditional SQL commands.
-    show-sql: true
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

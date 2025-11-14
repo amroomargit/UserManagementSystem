@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -188,9 +189,35 @@ public class UserService {
 
         Teacher teacherEntity = teacherMapper.toEntity(teacherDTO);
         teacherEntity.setUser(userEntity);
+
+
+
+
+
+        teacherEntity = populateTeacherTopics(teacherEntity);
+
         teacherRepo.save(teacherEntity);
 
         return teacherDTO;
+    }
+
+    public Teacher assignCourses(Teacher teacher){
+        List<Course> courses = teacher.getCourses();
+        List<Integer> courseIds = new ArrayList<>();
+        for(){
+
+        }
+
+        return teacher;
+    }
+
+    public Teacher populateTeacherTopics(Teacher teacher){
+        if(teacher.getCourses() == null) {
+            return teacher;
+        }
+        List<Topic> topics = teacher.getCourses().stream().map(Course::getTopic).filter(Objects::nonNull).distinct().toList();
+        teacher.setTopics(topics);
+        return teacher;
     }
 
     @Transactional
