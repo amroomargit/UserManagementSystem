@@ -14,7 +14,7 @@ public class StudentDTO extends UserDTO{ //StudentDTO inherits UserDTO so we can
     private String lastname;
 
     //Reference to CourseDTO for the ManyToMany between course and student
-    private List<CourseDTO> courses;
+    private List<CourseDTO> courseList;
 
     private UserDTO user; //refer to parent of student by its name
 

@@ -39,11 +39,11 @@ public class StudentService {
         for(var student:students){
             var courses = student.getCourses();
             var studentDTO = studentMapper.toDTO(student);
-            studentDTO.setCourses(new ArrayList<CourseDTO>());
+            studentDTO.setCourseList(new ArrayList<CourseDTO>());
 
             for(var course:courses){
                 var courseDTO  = courseMapper.toDTO(course);
-                studentDTO.getCourses().add(courseDTO);
+                studentDTO.getCourseList().add(courseDTO);
 
             }
             result.add(studentDTO);
@@ -54,6 +54,7 @@ public class StudentService {
 
     /* Method that returns a StudentDTO by the id. The student repository has a built-in findById method, so we use that to find
     the student matching the id, then the student we found gets mapped into a DTO using the toDTO method we made in StudentMapper class */
+    @Transactional
     public StudentDTO getStudentById(int id){
         Student student = studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Could not find a student with id: "+id));
         /* var optional = studentRepo.findById(id);
@@ -64,36 +65,25 @@ public class StudentService {
         return studentMapper.toDTO(student);
     }
 
+    @Transactional
     public StudentDTO insertStudent(StudentDTO studentDTO){
         return service.studentRegistration(studentDTO);
     }
 
+    @Transactional
     public StudentDTO updateStudentInfo(int studentId, StudentDTO studentDTO){
         Optional<Student> findStudent = studentRepo.findById(studentId);
 
         if(findStudent.isPresent()) {
-            if (findStudent.get().getFirstname()!=null){
-                findStudent.get().setFirstname(studentDTO.getFirstname());
-            }
-
-            if (findStudent.get().getLastname()!=null){
-                findStudent.get().setLastname(studentDTO.getLastname());
-            }
-
-            if (findStudent.get().getCourses()!=null){
-
-            }
-
-            if (findStudent.get().getCertificates()!=null){
-
-            }
-
+            findStudent.get().setFirstname(studentDTO.getFirstname());
+            findStudent.get().setLastname(studentDTO.getLastname());
             return studentMapper.toDTO(findStudent.get());
         }
 
         throw new BusinessException("Unsuccessful Update.");
     }
 
+    @Transactional
     public String deleteStudent(int studentId){
         Optional<Student> findStudent = studentRepo.findById(studentId);
         if(findStudent.isPresent()){

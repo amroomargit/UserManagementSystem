@@ -17,11 +17,9 @@ public class Certificate {
     @Column(name = "id")
     private int id;
 
-    @NotNull
     @Column(name = "grade")
     private float grade;
 
-    @NotBlank
     @Column(name = "certificatetype")
     private String certificateType;
 

@@ -100,8 +100,8 @@ public class UserService {
 
         //Reading courses that the student is registered in, and saving those so that they show up in the database jointable
         List<Course> courseEntities = new ArrayList<Course>();
-        if(studentDTO.getCourses() != null){ //if there are any courses to be registered in, in the first place
-            for(CourseDTO dto : studentDTO.getCourses()){
+        if(studentDTO.getCourseList() != null){ //if there are any courses to be registered in, in the first place
+            for(CourseDTO dto : studentDTO.getCourseList()){
                 Course c = courseRepo.findById(dto.getId()).orElseThrow(()->new BusinessException("Course not found: "+dto.getId()));
                 c.getStudents().add(studentEntity);
                 courseEntities.add(c);
