@@ -190,9 +190,9 @@ public class UserService {
         Teacher teacherEntity = teacherMapper.toEntity(teacherDTO);
         teacherEntity.setUser(userEntity);
 
-        teacherEntity = assignCourses(teacherEntity,teacherDTO);
+        //teacherEntity = assignCourses(teacherEntity,teacherDTO);
 
-        teacherEntity = populateTeacherTopics(teacherEntity);
+        //teacherEntity = populateTeacherTopics(teacherEntity);
 
         teacherRepo.save(teacherEntity);
 
@@ -201,7 +201,7 @@ public class UserService {
 
     /*This method is to assign the courses that are being entered into the JSON when we register a Teacher because they were not being saved to
     the database before. */
-    public Teacher assignCourses(Teacher teacherEntity, TeacherDTO teacherDTO){
+    /*public Teacher assignCourses(Teacher teacherEntity, TeacherDTO teacherDTO){
         //Extract IDs from DTO
         List<Integer> courseIds = teacherDTO.getCourseList().stream().map(CourseDTO::getId).toList();
 
@@ -238,7 +238,7 @@ public class UserService {
     /*This method is to extract the topicId from the courses that the teacher is being registered with so that a teacher
     * can only be associated with a topic they are teaching via a course, otherwise, what association could they have
     * with that topic if they are not teaching it?*/
-    public Teacher populateTeacherTopics(Teacher teacher){
+    /*public Teacher populateTeacherTopics(Teacher teacher){
         if(teacher.getCourses() == null) {
             return teacher;
         }
@@ -247,7 +247,7 @@ public class UserService {
         teacher.setTopics(topics);
 
         return teacher;
-    }
+    } */
 
     @Transactional
     public String adminRegistration(AdminDTO adminDTO){
