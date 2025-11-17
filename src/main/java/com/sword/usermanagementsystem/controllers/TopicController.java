@@ -4,9 +4,8 @@ import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,4 +21,24 @@ public class TopicController {
         var topicReturnVariable = service.getAllTopics(); //topicReturnVariable is needed so we can see in debugger
         return ResponseEntity.ok().body(topicReturnVariable);
     }
+
+    @PostMapping("/insert-topic")
+    @PreAuthorize(("hasRole('ADMIN')"))
+    public ResponseEntity<TopicDTO> newTopic(@RequestBody TopicDTO topicDTO){
+        return ResponseEntity.ok().body(service.newTopic(topicDTO));
+    }
+
+    @PostMapping("/update-topic-info/{topicId}")
+    @PatchMapping(("hasRole('ADMIN')"))
+    public ResponseEntity<TopicDTO> updateTopicInfo(@PathVariable int topicId, @RequestBody TopicDTO topicDTO){
+        return ResponseEntity.ok().body(service.updateTopicInfo(topicId, topicDTO));
+    }
+
+    @DeleteMapping("/delete-topic/{topicId}")
+    @PreAuthorize(("hasRole('ADMIN')"))
+    public ResponseEntity<String> deleteTopic(@PathVariable int topicId){
+        return ResponseEntity.ok().body(service.deleteTopic(topicId));
+    }
+
+
 }
