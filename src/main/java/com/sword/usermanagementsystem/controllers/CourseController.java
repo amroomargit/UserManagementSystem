@@ -1,12 +1,12 @@
 package com.sword.usermanagementsystem.controllers;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
+import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +22,23 @@ public class CourseController {
         var courseReturnVariable = service.getAllCourses(); //courseReturnVariable is needed so we can see in debugger
         return ResponseEntity.ok().body(courseReturnVariable);
     }
+
+    @PostMapping("/insert-course")
+    @PreAuthorize(("hasRole('ADMIN')"))
+    public ResponseEntity<CourseDTO> insertCourse(@RequestBody CourseDTO courseDTO){
+        return ResponseEntity.ok().body(service.insertCourse(courseDTO));
+    }
+
+    @PostMapping("/update-course-info/{courseId}")
+    @PatchMapping(("hasRole('ADMIN')"))
+    public ResponseEntity<CourseDTO> updateCourseInfo(@PathVariable int courseId, @RequestBody CourseDTO courseDTO){
+        return ResponseEntity.ok().body(service.updateCourseInfo(courseId, courseDTO));
+    }
+
+    @DeleteMapping("/delete-course/{courseId}")
+    @PreAuthorize(("hasRole('ADMIN')"))
+    public ResponseEntity<String> deleteCourse(@PathVariable int courseId){
+
 
 
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
