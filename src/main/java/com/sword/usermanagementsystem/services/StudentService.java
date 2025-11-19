@@ -7,6 +7,7 @@ import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
+import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class StudentService {
 
     @Autowired
     UserService service;
+
+    @Autowired
+    private CourseRepository courseRepo;
 
     //ManyToMany between courses and students
     @Transactional
@@ -91,6 +95,27 @@ public class StudentService {
             return "Student: "+ studentId +" has been successfully deleted from student and users, certificate, course and course_student tables.";
         }
         throw new BusinessException("Unsuccessful Deletion.");
+    }
+
+    /*There is no studentId in course or courseId in student, it's a many to many relationship so we cant do it the same
+    * way we did with certificate, we need to figure out a way to do it through the course_student jointable*/
+    @Transactional
+    public List<StudentDTO> getStudentsInACourse(int courseId){
+        Optional<Course> findCourse = courseRepo.findById(courseId);
+
+        if(findCourse.isPresent()){
+            List<StudentDTO> studentsInCourse = new ArrayList<>();
+            List<Student> findGivenCourseIdInStudentTable = studentRepo.findByCourse_Id(courseId);
+
+            if(!findGivenCourseIdInStudentTable.isEmpty()){
+                for(int i = 0 ; i<=findGivenCourseIdInStudentTable.size(); i++){
+                    studentsInCourse.add(studentMapper.toDTO(findGivenCourseIdInStudentTable.get(i)));
+                }
+                return studentsInCourse;
+            }
+            throw new BusinessException("There is a course with id: "+courseId+" , but, there are no students registered in this course.");
+        }
+        throw new BusinessException("There is no course with id: "+courseId);
     }
 
 }

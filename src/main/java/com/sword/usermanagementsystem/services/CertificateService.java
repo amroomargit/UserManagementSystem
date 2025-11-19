@@ -117,7 +117,7 @@ public class CertificateService {
             var certificatesBelongingToStudent = certificateRepo.findByStudent_Id(studentId);
 
             if(!certificatesBelongingToStudent.isEmpty()){
-                for(int i = 0;i<certificatesBelongingToStudent.size();i++){
+                for(int i = 0;i<=certificatesBelongingToStudent.size();i++){
                     var mappedCertificate = certificateMapper.toDTO(certificatesBelongingToStudent.get(i));
                     certificateDTOList.add(mappedCertificate);
                 }

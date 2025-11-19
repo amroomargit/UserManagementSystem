@@ -1,6 +1,7 @@
 package com.sword.usermanagementsystem.controllers;
 
 import com.sword.usermanagementsystem.dtos.StudentDTO;
+import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,5 +61,11 @@ public class StudentController {
     @DeleteMapping("/delete-student/{studentId}")
     public ResponseEntity<String> deleteStudent(@PathVariable int studentId){
         return ResponseEntity.ok().body(service.deleteStudent(studentId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-students-in-a-course/{courseId}")
+    public ResponseEntity<List<StudentDTO>> getStudentsInACourse(@PathVariable int courseId){
+        return ResponseEntity.ok().body(service.getStudentsInACourse(courseId));
     }
 }
