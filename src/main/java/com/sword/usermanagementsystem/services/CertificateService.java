@@ -2,11 +2,13 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CertificateDTO;
 import com.sword.usermanagementsystem.entities.Certificate;
+import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CertificateMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.repositories.CertificateRepository;
+import com.sword.usermanagementsystem.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class CertificateService {
 
     @Autowired
     StudentMapper studentMapper;
+
+    @Autowired
+    StudentRepository studentRepo;
 
     @Transactional
     public List<CertificateDTO> getAllCertificates(){
@@ -91,5 +96,34 @@ public class CertificateService {
         }
 
         throw new BusinessException("Certificate with id: "+certificateId+" does not exist.");
+    }
+
+    @Transactional
+    public CertificateDTO printCertificate(int certificateId){
+        Optional<Certificate> findCertificate = certificateRepo.findById(certificateId);
+
+        if(findCertificate.isPresent()){
+            return certificateMapper.toDTO(findCertificate.get());
+        }
+        throw new BusinessException("There is no certificate with the id: " + certificateId);
+    }
+
+    @Transactional
+    public List<CertificateDTO> getCertificateByStudentId(int studentId){
+        Optional<Student> findStudent = studentRepo.findById(studentId);
+
+        if(findStudent.isPresent()){
+            List<CertificateDTO> certificateDTOList = new ArrayList<>();
+            var certificatesBelongingToStudent = certificateRepo.findByStudent_Id(studentId);
+
+            for(int i = 0;i<certificatesBelongingToStudent.size();i++){
+                var mappedCertificate = certificateMapper.toDTO(certificatesBelongingToStudent.get(i));
+                certificateDTOList.add(mappedCertificate);
+            }
+            return certificateDTOList;
+            
+            throw new BusinessException("There is a student with id: "+studentId+", but that student does not have a certificate.");
+        }
+        throw new BusinessException("There is no student with id: "+studentId);
     }
 }

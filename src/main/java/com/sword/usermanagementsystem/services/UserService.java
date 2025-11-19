@@ -190,64 +190,11 @@ public class UserService {
         Teacher teacherEntity = teacherMapper.toEntity(teacherDTO);
         teacherEntity.setUser(userEntity);
 
-        //teacherEntity = assignCourses(teacherEntity,teacherDTO);
-
-        //teacherEntity = populateTeacherTopics(teacherEntity);
-
         teacherRepo.save(teacherEntity);
 
         return teacherDTO;
     }
 
-    /*This method is to assign the courses that are being entered into the JSON when we register a Teacher because they were not being saved to
-    the database before. */
-    /*public Teacher assignCourses(Teacher teacherEntity, TeacherDTO teacherDTO){
-        //Extract IDs from DTO
-        List<Integer> courseIds = teacherDTO.getCourseList().stream().map(CourseDTO::getId).toList();
-
-        //Load the actual course entities
-        List<Course> courses = courseRepo.findAllById(courseIds);
-
-        //Check if any of the courses entered do not exist (check if the id is present in course table in db)
-        if(courses.size() != courseIds.size()){
-            List<Integer> foundIds = courses.stream().map(Course::getId).toList();
-            List<Integer> missingIds = courseIds.stream().filter(id ->! foundIds.contains(id)).toList();
-            throw new BusinessException("The following course IDs do not exist: " +missingIds);
-        }
-
-        //Make sure there isn't a teacher already assigned to any of the courses
-        for(Course c : courses){
-            if(c.getTeacher() != null){
-                throw new BusinessException("Course '" + c.getName() + "' is already assigned to another teacher.");
-            }
-        }
-
-        //Assign the teacher being registered to the list of courses entered when the ResponseBody DTO was sent to register
-        for(Course c : courses){
-            c.setTeacher(teacherEntity);
-        }
-
-        //Save courses
-        courseRepo.saveAll(courses);
-
-        teacherEntity.setCourses(courses);
-
-        return teacherEntity;
-    }
-
-    /*This method is to extract the topicId from the courses that the teacher is being registered with so that a teacher
-    * can only be associated with a topic they are teaching via a course, otherwise, what association could they have
-    * with that topic if they are not teaching it?*/
-    /*public Teacher populateTeacherTopics(Teacher teacher){
-        if(teacher.getCourses() == null) {
-            return teacher;
-        }
-
-        List<Topic> topics = teacher.getCourses().stream().map(Course::getTopic).filter(Objects::nonNull).distinct().toList();
-        teacher.setTopics(topics);
-
-        return teacher;
-    } */
 
     @Transactional
     public String adminRegistration(AdminDTO adminDTO){

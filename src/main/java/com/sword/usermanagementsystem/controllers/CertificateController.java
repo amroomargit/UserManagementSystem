@@ -40,4 +40,17 @@ public class CertificateController {
     public ResponseEntity<String> deleteCertificate(@PathVariable int certificateId){
         return ResponseEntity.ok().body(service.deleteCertificate(certificateId));
     }
+
+    @GetMapping("/print-certificate/{certificateId}")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<CertificateDTO> printCertificate(@PathVariable int certificateId){
+        return ResponseEntity.ok().body(service.printCertificate(certificateId));
+    }
+
+    @GetMapping("//{studentId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CertificateDTO>> getCertificateByStudentId(@PathVariable int studentId){
+        return ResponseEntity.ok().body(service.getCertificateByStudentId(studentId));
+    }
+
 }
