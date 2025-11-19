@@ -1,6 +1,8 @@
 package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CertificateDTO;
+import com.sword.usermanagementsystem.entities.Certificate;
+import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CertificateMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,5 +59,37 @@ public class CertificateService {
         }
 
         return result;
+    }
+
+    @Transactional
+    public CertificateDTO insertCertificate(CertificateDTO certificateDTO){
+        certificateRepo.save(certificateMapper.toEntity(certificateDTO));
+        return certificateDTO;
+    }
+
+    @Transactional
+    public CertificateDTO updateCertificateInfo(CertificateDTO certificateDTO, int certificateId){
+        Optional<Certificate> findCertificate = certificateRepo.findById(certificateId);
+
+        if(findCertificate.isPresent()){
+            findCertificate.get().setCertificateType(certificateDTO.getCertificateType());
+            findCertificate.get().setGrade(certificateDTO.getGrade());
+            findCertificate.get().setStudent(studentMapper.toEntity(certificateDTO.getStudent()));
+            findCertificate.get().setCourse(courseMapper.toEntity(certificateDTO.getCourse()));
+            return certificateDTO;
+        }
+        throw new BusinessException("Certificate with id: "+certificateId+" does not exist.");
+    }
+
+    @Transactional
+    public String deleteCertificate(int certificateId){
+        Optional<Certificate> findCertificate = certificateRepo.findById(certificateId);
+
+        if(findCertificate.isPresent()){
+            certificateRepo.deleteById(certificateId);
+            return ("Certificate with Id: " +certificateId+ " has been successfully deleted.");
+        }
+
+        throw new BusinessException("Certificate with id: "+certificateId+" does not exist.");
     }
 }

@@ -18,27 +18,29 @@ public class CourseController {
     private CourseService service;
 
     @GetMapping("/all")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(){ //Check doc to see why we return ResponseEntity<>
+    public ResponseEntity<List<CourseDTO>> getAllCourses() { //Check doc to see why we return ResponseEntity<>
         var courseReturnVariable = service.getAllCourses(); //courseReturnVariable is needed so we can see in debugger
         return ResponseEntity.ok().body(courseReturnVariable);
     }
 
     @PostMapping("/insert-course")
     @PreAuthorize(("hasRole('ADMIN')"))
-    public ResponseEntity<CourseDTO> insertCourse(@RequestBody CourseDTO courseDTO){
+    public ResponseEntity<CourseDTO> insertCourse(@RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok().body(service.insertCourse(courseDTO));
     }
 
     @PostMapping("/update-course-info/{courseId}")
     @PatchMapping(("hasRole('ADMIN')"))
-    public ResponseEntity<CourseDTO> updateCourseInfo(@PathVariable int courseId, @RequestBody CourseDTO courseDTO){
+    public ResponseEntity<CourseDTO> updateCourseInfo(@PathVariable int courseId, @RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok().body(service.updateCourseInfo(courseId, courseDTO));
     }
 
     @DeleteMapping("/delete-course/{courseId}")
     @PreAuthorize(("hasRole('ADMIN')"))
-    public ResponseEntity<String> deleteCourse(@PathVariable int courseId){
-
+    public ResponseEntity<String> deleteCourse(@PathVariable int courseId) {
+        return ResponseEntity.ok().body(service.deleteCourse(courseId));
+    }
+}
 
 
     /* NOTE: For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
@@ -46,6 +48,5 @@ public class CourseController {
     owns the other, they’re equal. You have to choose one to expose first.
 
     CourseService and CourseController, were chosen purely as a test entry point (no deeper reason). It’s arbitrary,
-    you could have picked Topic instead.
-    */
-}
+    you could have picked Topic instead. */
+
