@@ -116,12 +116,13 @@ public class CertificateService {
             List<CertificateDTO> certificateDTOList = new ArrayList<>();
             var certificatesBelongingToStudent = certificateRepo.findByStudent_Id(studentId);
 
-            for(int i = 0;i<certificatesBelongingToStudent.size();i++){
-                var mappedCertificate = certificateMapper.toDTO(certificatesBelongingToStudent.get(i));
-                certificateDTOList.add(mappedCertificate);
+            if(!certificatesBelongingToStudent.isEmpty()){
+                for(int i = 0;i<certificatesBelongingToStudent.size();i++){
+                    var mappedCertificate = certificateMapper.toDTO(certificatesBelongingToStudent.get(i));
+                    certificateDTOList.add(mappedCertificate);
+                }
+                return certificateDTOList;
             }
-            return certificateDTOList;
-            
             throw new BusinessException("There is a student with id: "+studentId+", but that student does not have a certificate.");
         }
         throw new BusinessException("There is no student with id: "+studentId);

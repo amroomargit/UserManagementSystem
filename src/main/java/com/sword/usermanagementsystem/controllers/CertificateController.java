@@ -47,7 +47,7 @@ public class CertificateController {
         return ResponseEntity.ok().body(service.printCertificate(certificateId));
     }
 
-    @GetMapping("//{studentId}")
+    @GetMapping("/get-Certificate-By-Student-Id/{studentId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CertificateDTO>> getCertificateByStudentId(@PathVariable int studentId){
         return ResponseEntity.ok().body(service.getCertificateByStudentId(studentId));
