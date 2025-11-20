@@ -63,7 +63,7 @@ public class StudentController {
         return ResponseEntity.ok().body(service.deleteStudent(studentId));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
     @GetMapping("/get-students-in-a-course/{courseId}")
     public ResponseEntity<List<StudentDTO>> getStudentsInACourse(@PathVariable int courseId){
         return ResponseEntity.ok().body(service.getStudentsInACourse(courseId));
