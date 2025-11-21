@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.services.StudentService;
@@ -67,5 +68,11 @@ public class StudentController {
     @GetMapping("/get-students-in-a-course/{courseId}")
     public ResponseEntity<List<StudentDTO>> getStudentsInACourse(@PathVariable int courseId){
         return ResponseEntity.ok().body(service.getStudentsInACourse(courseId));
+    }
+
+    @PatchMapping("/enroll-student-in-a-course/{studentId}/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CourseDTO>> enrollStudentInACourse(@PathVariable int studentId, @PathVariable int courseId){
+        return ResponseEntity.ok().body(service.enrollStudentInACourse(studentId,courseId));
     }
 }

@@ -116,4 +116,23 @@ public class StudentService {
         }
         throw new BusinessException("There is no course with id: "+courseId);
     }
+
+    @Transactional
+    public List<CourseDTO> enrollStudentInACourse(int studentId, int courseId){
+        Optional<Student> findStudent = studentRepo.findById(studentId);
+        Optional<Course> findCourse = courseRepo.findById(courseId);
+
+        if(findStudent.isPresent()){
+            if(findCourse.isPresent()){
+
+                List<Course> studentCourseList = findStudent.get().getCourses();
+                studentCourseList.add(findCourse.get());
+                findStudent.get().setCourses(studentCourseList);
+
+                return findStudent.get().getCourses().stream().map(courseMapper::toDTO).toList();
+            }
+            throw new BusinessException("There is a student with the id: " +studentId+", but there is no course with id: "+courseId);
+        }
+        throw new BusinessException("There is no student with id: "+studentId);
+    }
 }
