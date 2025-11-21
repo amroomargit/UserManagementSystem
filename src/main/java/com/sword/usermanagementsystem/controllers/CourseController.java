@@ -40,6 +40,12 @@ public class CourseController {
     public ResponseEntity<String> deleteCourse(@PathVariable int courseId) {
         return ResponseEntity.ok().body(service.deleteCourse(courseId));
     }
+
+    @GetMapping("/get-a-students-courses/{studentId}")
+    @PreAuthorize(("hasRole('ADMIN')"))
+    public ResponseEntity<List<CourseDTO>> getAStudentsCourses(@PathVariable int studentId){
+        return ResponseEntity.ok().body(service.getAStudentsCourses(studentId));
+    }
 }
 
 

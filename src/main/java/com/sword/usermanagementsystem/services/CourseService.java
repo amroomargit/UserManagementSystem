@@ -112,4 +112,15 @@ public class CourseService {
         }
         throw new BusinessException("Unsuccessful Deletion.");
     }
+
+    @Transactional
+    public List<CourseDTO> getAStudentsCourses(int studentId){
+        Optional<Student> findStudent = studentRepo.findById(studentId);
+
+        if(findStudent.isPresent()){
+            
+            throw new BusinessException("There is a student with id: "+studentId+", but, this student is not registered in any courses.");
+        }
+        throw new BusinessException("There is no student with the id: "+studentId);
+    }
 }
