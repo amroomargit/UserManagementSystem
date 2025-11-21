@@ -59,4 +59,10 @@ public class TeacherController {
     public ResponseEntity<String> deleteTeacher(@PathVariable int teacherId){
         return ResponseEntity.ok().body(service.deleteTeacher(teacherId));
     }
+
+    @PatchMapping("/assign-teacher-to-a-course/{teacherId}/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> assignTeacherToACourse(@PathVariable int teacherId, @PathVariable int courseId){
+        return ResponseEntity.ok().body(service.assignTeacherToACourse(teacherId,courseId));
+    }
 }

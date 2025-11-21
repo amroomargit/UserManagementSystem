@@ -2,6 +2,7 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
+import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
 import com.sword.usermanagementsystem.entities.User;
@@ -9,6 +10,7 @@ import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
+import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.TeacherRepository;
 import com.sword.usermanagementsystem.repositories.TopicRepository;
 import com.sword.usermanagementsystem.repositories.UserRepository;
@@ -46,6 +48,9 @@ public class TeacherService {
 
     @Autowired
     UserService service;
+
+    @Autowired
+    CourseRepository courseRepo;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -122,5 +127,20 @@ public class TeacherService {
         }
 
         throw new BusinessException("Unsuccessful Deletion.");
+    }
+
+    @Transactional
+    public String assignTeacherToACourse(int teacherId, int courseId){
+        Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
+        Optional<Course> findCourse = courseRepo.findById(courseId);
+
+        if(findTeacher.isPresent()){
+            if(findCourse.isPresent()){
+                findCourse.get().setTeacher(findTeacher.get());
+                return ("Teacher "+findCourse.get().getTeacher()+" has been successfully assigned to course "+courseId);
+            }
+            throw new BusinessException("There is no course with id: "+courseId);
+        }
+        throw new BusinessException("There is no teacher with id: "+teacherId);
     }
 }

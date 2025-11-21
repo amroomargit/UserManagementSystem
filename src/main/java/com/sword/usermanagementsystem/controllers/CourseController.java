@@ -42,7 +42,7 @@ public class CourseController {
     }
 
     @GetMapping("/get-a-students-courses/{studentId}")
-    @PreAuthorize(("hasRole('ADMIN')"))
+    @PreAuthorize(("hasRole('ADMIN','TEACHER',STUDENT)"))
     public ResponseEntity<List<CourseDTO>> getAStudentsCourses(@PathVariable int studentId){
         return ResponseEntity.ok().body(service.getAStudentsCourses(studentId));
     }
