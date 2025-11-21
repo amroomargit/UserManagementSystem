@@ -36,17 +36,17 @@ public class StudentService {
 
     //ManyToMany between courses and students
     @Transactional
-    public List<StudentDTO> getAllStudents(){
+    public List<StudentDTO> getAllStudents() {
         var students = studentRepo.findAll();
 
         var result = new ArrayList<StudentDTO>();
-        for(var student:students){
+        for (var student : students) {
             var courses = student.getCourses();
             var studentDTO = studentMapper.toDTO(student);
             studentDTO.setCourseList(new ArrayList<CourseDTO>());
 
-            for(var course:courses){
-                var courseDTO  = courseMapper.toDTO(course);
+            for (var course : courses) {
+                var courseDTO = courseMapper.toDTO(course);
                 studentDTO.getCourseList().add(courseDTO);
 
             }
@@ -59,8 +59,8 @@ public class StudentService {
     /* Method that returns a StudentDTO by the id. The student repository has a built-in findById method, so we use that to find
     the student matching the id, then the student we found gets mapped into a DTO using the toDTO method we made in StudentMapper class */
     @Transactional
-    public StudentDTO getStudentById(int id){
-        Student student = studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Could not find a student with id: "+id));
+    public StudentDTO getStudentById(int id) {
+        Student student = studentRepo.findById(id).orElseThrow(() -> new RuntimeException("Could not find a student with id: " + id));
         /* var optional = studentRepo.findById(id);
         optional.ifPresent((a)->{});
         if(optional.isPresent()){
@@ -70,15 +70,15 @@ public class StudentService {
     }
 
     @Transactional
-    public StudentDTO insertStudent(StudentDTO studentDTO){
+    public StudentDTO insertStudent(StudentDTO studentDTO) {
         return service.studentRegistration(studentDTO);
     }
 
     @Transactional
-    public StudentDTO updateStudentInfo(int studentId, StudentDTO studentDTO){
+    public StudentDTO updateStudentInfo(int studentId, StudentDTO studentDTO) {
         Optional<Student> findStudent = studentRepo.findById(studentId);
 
-        if(findStudent.isPresent()) {
+        if (findStudent.isPresent()) {
             findStudent.get().setFirstname(studentDTO.getFirstname());
             findStudent.get().setLastname(studentDTO.getLastname());
             return studentMapper.toDTO(findStudent.get());
@@ -88,51 +88,43 @@ public class StudentService {
     }
 
     @Transactional
-    public String deleteStudent(int studentId){
+    public String deleteStudent(int studentId) {
         Optional<Student> findStudent = studentRepo.findById(studentId);
-        if(findStudent.isPresent()){
+        if (findStudent.isPresent()) {
             studentRepo.deleteById(studentId);
-            return "Student: "+ studentId +" has been successfully deleted from student and users, certificate, course and course_student tables.";
+            return "Student: " + studentId + " has been successfully deleted from student and users, certificate, course and course_student tables.";
         }
         throw new BusinessException("Unsuccessful Deletion.");
     }
 
 
     /*There is no studentId in course or courseId in student, it's a many-to-many relationship so we cant do it the same
-    * way we did with certificate, you have to do it through the course_student join table*/
+     * way we did with certificate, you have to do it through the course_student join table*/
     @Transactional
-    public List<StudentDTO> getStudentsInACourse(int courseId){
+    public List<StudentDTO> getStudentsInACourse(int courseId) {
 
         Optional<Course> findCourse = courseRepo.findById(courseId);
 
-        if(findCourse.isPresent()){
+        if (findCourse.isPresent()) {
             List<Student> studentsInTheCourse = findCourse.get().getStudents();
 
-            if(studentsInTheCourse.isEmpty()){
-                throw new BusinessException("There is a course with id: "+courseId+" , but, there are no students registered in this course.");
+            if (studentsInTheCourse.isEmpty()) {
+                throw new BusinessException("There is a course with id: " + courseId + " , but, there are no students registered in this course.");
             }
 
             return studentsInTheCourse.stream().map(studentMapper::toDTO).toList();
         }
-        throw new BusinessException("There is no course with id: "+courseId);
+        throw new BusinessException("There is no course with id: " + courseId);
     }
 
     @Transactional
-    public List<CourseDTO> enrollStudentInACourse(int studentId, int courseId){
-        Optional<Student> findStudent = studentRepo.findById(studentId);
-        Optional<Course> findCourse = courseRepo.findById(courseId);
+    public List<CourseDTO> enrollStudentInACourse(int studentId, int courseId) {
+        Student student = studentRepo.findById(studentId).orElseThrow(() -> new BusinessException("There is no student " + studentId));
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course " + courseId));
 
-        if(findStudent.isPresent()){
-            if(findCourse.isPresent()){
+        student.getCourses().add(course);
+        course.getStudents().add(student);
 
-                List<Course> studentCourseList = findStudent.get().getCourses();
-                studentCourseList.add(findCourse.get());
-                findStudent.get().setCourses(studentCourseList);
-
-                return findStudent.get().getCourses().stream().map(courseMapper::toDTO).toList();
-            }
-            throw new BusinessException("There is a student with the id: " +studentId+", but there is no course with id: "+courseId);
-        }
-        throw new BusinessException("There is no student with id: "+studentId);
+        return student.getCourses().stream().map(courseMapper::toDTO).toList();
     }
 }

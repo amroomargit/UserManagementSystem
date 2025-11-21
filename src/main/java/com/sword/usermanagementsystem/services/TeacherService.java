@@ -131,16 +131,10 @@ public class TeacherService {
 
     @Transactional
     public String assignTeacherToACourse(int teacherId, int courseId){
-        Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
-        Optional<Course> findCourse = courseRepo.findById(courseId);
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException("Teacher "+teacherId+" not found."));
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("Course "+courseId+" not found."));
 
-        if(findTeacher.isPresent()){
-            if(findCourse.isPresent()){
-                findCourse.get().setTeacher(findTeacher.get());
-                return ("Teacher "+findCourse.get().getTeacher()+" has been successfully assigned to course "+courseId);
-            }
-            throw new BusinessException("There is no course with id: "+courseId);
-        }
-        throw new BusinessException("There is no teacher with id: "+teacherId);
+        course.setTeacher(teacher);
+        return ("Teacher "+course.getTeacher().getId()+" has been successfully assigned to course "+courseId);
     }
 }
