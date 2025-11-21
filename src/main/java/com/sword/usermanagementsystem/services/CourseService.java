@@ -118,7 +118,10 @@ public class CourseService {
         Optional<Student> findStudent = studentRepo.findById(studentId);
 
         if(findStudent.isPresent()){
-            
+            List<Course> studentsCourses = findStudent.get().getCourses();
+            if(!studentsCourses.isEmpty()){
+                return studentsCourses.stream().map(courseMapper::toDTO).toList();
+            }
             throw new BusinessException("There is a student with id: "+studentId+", but, this student is not registered in any courses.");
         }
         throw new BusinessException("There is no student with the id: "+studentId);
