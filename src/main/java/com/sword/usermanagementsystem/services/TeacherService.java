@@ -140,7 +140,7 @@ public class TeacherService {
 
     @Transactional
     public TeacherDTO coursesTeacher(int courseId){
-        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course with id "+courseId));
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException(String.format("no course with id %s",courseId)));
 
         return teacherMapper.toDTO(course.getTeacher());
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/certificates")
+@RequestMapping("/certificates") // SHOULD BE /api/certificates for all controllers
 @PreAuthorize("hasRole('ADMIN')")
 public class CertificateController {
 
@@ -58,4 +58,5 @@ public class CertificateController {
     public ResponseEntity<List<CertificateDTO>> printCertificatesByCourse(@PathVariable int courseId){
         return ResponseEntity.ok().body(service.printCertificatesByCourse(courseId));
     }
+
 }

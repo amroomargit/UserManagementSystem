@@ -136,7 +136,7 @@ public class CertificateService {
 
     @Transactional
     public List<CertificateDTO> printCertificatesByCourse (int courseId){
-        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course with id "+courseId));
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException(String.format("no course with id %s",courseId)));
 
         return course.getCertificates().stream().map(certificateMapper::toDTO).toList();
     }

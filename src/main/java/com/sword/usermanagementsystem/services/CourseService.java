@@ -133,7 +133,7 @@ public class CourseService {
 
     @Transactional
     public List<CourseDTO> teachersCourses(int teacherId){
-        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException("No teacher with id "+teacherId));
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("no teacher with id %s",teacherId)));
 
         return teacher.getCourses().stream().map(courseMapper::toDTO).toList();
     }
