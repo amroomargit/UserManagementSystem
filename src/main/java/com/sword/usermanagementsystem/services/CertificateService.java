@@ -1,13 +1,16 @@
 package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CertificateDTO;
+import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.entities.Certificate;
 import com.sword.usermanagementsystem.entities.Student;
+import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CertificateMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.repositories.CertificateRepository;
+import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class CertificateService {
 
     @Autowired
     StudentRepository studentRepo;
+
+    @Autowired
+    CourseRepository courseRepo;
 
     @Transactional
     public List<CertificateDTO> getAllCertificates(){
@@ -126,5 +132,12 @@ public class CertificateService {
             throw new BusinessException("There is a student with id: "+studentId+", but that student does not have a certificate.");
         }
         throw new BusinessException("There is no student with id: "+studentId);
+    }
+
+    @Transactional
+    public List<CertificateDTO> printCertificatesByCourse (int courseId){
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course with id "+courseId));
+
+        return course.getCertificates().stream().map(certificateMapper::toDTO).toList();
     }
 }

@@ -137,4 +137,11 @@ public class TeacherService {
         course.setTeacher(teacher);
         return ("Teacher "+course.getTeacher().getId()+" has been successfully assigned to course "+courseId);
     }
+
+    @Transactional
+    public TeacherDTO coursesTeacher(int courseId){
+        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course with id "+courseId));
+
+        return teacherMapper.toDTO(course.getTeacher());
+    }
 }

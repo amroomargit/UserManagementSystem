@@ -53,4 +53,9 @@ public class CertificateController {
         return ResponseEntity.ok().body(service.getCertificateByStudentId(studentId));
     }
 
+    @GetMapping("/print-all-certificates-from-course/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CertificateDTO>> printCertificatesByCourse(@PathVariable int courseId){
+        return ResponseEntity.ok().body(service.printCertificatesByCourse(courseId));
+    }
 }

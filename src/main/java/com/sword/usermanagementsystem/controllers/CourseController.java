@@ -46,6 +46,12 @@ public class CourseController {
     public ResponseEntity<List<CourseDTO>> getAStudentsCourses(@PathVariable int studentId){
         return ResponseEntity.ok().body(service.getAStudentsCourses(studentId));
     }
+
+    @GetMapping("/teachers-courses/{teacherId}")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    public ResponseEntity<List<CourseDTO>> teachersCourses(@PathVariable int teacherId){
+        return ResponseEntity.ok().body(service.teachersCourses(teacherId));
+    }
 }
 
 

@@ -65,4 +65,10 @@ public class TeacherController {
     public ResponseEntity<String> assignTeacherToACourse(@PathVariable int teacherId, @PathVariable int courseId){
         return ResponseEntity.ok().body(service.assignTeacherToACourse(teacherId,courseId));
     }
+
+    @GetMapping("/courses-teacher/{courseId}")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
+    public ResponseEntity<TeacherDTO> coursesTeacher(@PathVariable int courseId){
+        return ResponseEntity.ok().body(service.coursesTeacher(courseId));
+    }
 }

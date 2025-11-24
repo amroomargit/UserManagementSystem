@@ -11,6 +11,7 @@ import com.sword.usermanagementsystem.mappers.TopicMapper;
 import com.sword.usermanagementsystem.repositories.CertificateRepository;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
+import com.sword.usermanagementsystem.repositories.TeacherRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ public class CourseService {
 
     @Autowired
     TopicMapper topicMapper;
+
+    @Autowired
+    TeacherRepository teacherRepo;
 
     //ManyToMany between courses and students
     @Transactional
@@ -125,5 +129,12 @@ public class CourseService {
             throw new BusinessException("There is a student with id: "+studentId+", but, this student is not registered in any courses.");
         }
         throw new BusinessException("There is no student with the id: "+studentId);
+    }
+
+    @Transactional
+    public List<CourseDTO> teachersCourses(int teacherId){
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException("No teacher with id "+teacherId));
+
+        return teacher.getCourses().stream().map(courseMapper::toDTO).toList();
     }
 }
