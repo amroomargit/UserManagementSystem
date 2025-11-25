@@ -75,4 +75,10 @@ public class StudentController {
     public ResponseEntity<List<CourseDTO>> enrollStudentInACourse(@PathVariable int studentId, @PathVariable int courseId){
         return ResponseEntity.ok().body(service.enrollStudentInACourse(studentId,courseId));
     }
+
+    @GetMapping("/topics-students/{topicId}")
+    @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
+    public ResponseEntity<List<StudentDTO>> getTopicsStudents(@PathVariable int topicId){
+        return ResponseEntity.ok().body(service.getTopicsStudents(topicId));
+    }
 }

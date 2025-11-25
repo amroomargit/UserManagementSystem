@@ -103,4 +103,10 @@ public class UserController {
     public ResponseEntity<String> changePassword(@PathVariable int userId, @RequestBody ChangePasswordDTO changePasswordDTO){
         return ResponseEntity.ok().body(service.changePassword(userId, changePasswordDTO));
     }
+
+    @GetMapping("/view-user-profile/{userId}")
+    @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> viewUserProfile (@PathVariable int userId){
+        return ResponseEntity.ok().body(service.viewUserProfile(userId));
+    }
 }

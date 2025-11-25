@@ -40,5 +40,10 @@ public class TopicController {
         return ResponseEntity.ok().body(service.deleteTopic(topicId));
     }
 
+    @GetMapping("/students-topics/{studentId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TopicDTO>> getAStudentsTopics (@PathVariable int studentId){
+        return ResponseEntity.ok().body(service.getAStudentsTopics(studentId));
+    }
 
 }

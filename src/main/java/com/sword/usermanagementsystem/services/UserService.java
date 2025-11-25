@@ -226,4 +226,11 @@ public class UserService {
         }
         return "Unsuccessful Password Change.";
     }
+
+    @Transactional
+    public UserDTO viewUserProfile(int userId){
+        User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
+
+        return userMapper.toDTO(user);
+    }
 }

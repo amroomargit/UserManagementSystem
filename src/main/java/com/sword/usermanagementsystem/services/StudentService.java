@@ -4,11 +4,14 @@ import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.entities.Student;
+import com.sword.usermanagementsystem.entities.Topic;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
+import com.sword.usermanagementsystem.mappers.TopicMapper;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
+import com.sword.usermanagementsystem.repositories.TopicRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,12 @@ public class StudentService {
 
     @Autowired
     private CourseRepository courseRepo;
+
+    @Autowired
+    TopicRepository topicRepo;
+
+    @Autowired
+    TopicMapper topicMapper;
 
     //ManyToMany between courses and students
     @Transactional
@@ -126,5 +135,14 @@ public class StudentService {
         course.getStudents().add(student);
 
         return student.getCourses().stream().map(courseMapper::toDTO).toList();
+    }
+
+    @Transactional
+    public List<StudentDTO> getTopicsStudents (int topicId){
+        Topic topic = topicRepo.findById(topicId).orElseThrow(() -> new BusinessException(String.format("There is no topic with id %d",topicId)));
+
+        /* This gets a list of StudentDTOs of all the student in a topic, but since there is an indirect link between
+         topic and student (we have to access topic via course), we do it this way */
+        return topic.getCourses().stream().flatMap(course -> course.getStudents().stream()).map(studentMapper::toDTO).toList();
     }
 }

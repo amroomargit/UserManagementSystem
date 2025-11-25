@@ -2,12 +2,14 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.entities.Course;
+import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.TopicMapper;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
+import com.sword.usermanagementsystem.repositories.StudentRepository;
 import com.sword.usermanagementsystem.repositories.TeacherRepository;
 import com.sword.usermanagementsystem.repositories.TopicRepository;
 import jakarta.transaction.Transactional;
@@ -35,6 +37,9 @@ public class TopicService {
 
     @Autowired
     TopicMapper topicMapper;
+
+    @Autowired
+    StudentRepository studentRepo;
 
     @Transactional
     public List<TopicDTO> getAllTopics(){
@@ -91,6 +96,19 @@ public class TopicService {
         throw new BusinessException("Unsuccessful Deletion.");
 
     }
+
+    @Transactional
+    public List<TopicDTO> getAStudentsTopics(int studentId){
+        Student student = studentRepo.findById(studentId).orElseThrow(()->new BusinessException(String.format("There is no student with Id %d",studentId)));
+
+        /* This gets a list of TopicDTOs of all the topics a student takes, but since there is an indirect link between
+         student and topic (we have to access topic via course), we do it this way */
+        return student.getCourses().stream().map(Course::getTopic).map(topicMapper::toDTO).toList();
+    }
+
+
+
+
 
 
     /* For One-to-Many (Teacher → Course), only needed TeacherController because each Teacher “owned” their Courses. You
