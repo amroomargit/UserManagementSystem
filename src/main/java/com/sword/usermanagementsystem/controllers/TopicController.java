@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,12 @@ public class TopicController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<TopicDTO>> getAStudentsTopics (@PathVariable int studentId){
         return ResponseEntity.ok().body(service.getAStudentsTopics(studentId));
+    }
+
+    @GetMapping("/teachers-topics/{teacherId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TopicDTO>> teachersTopics(@PathVariable int teacherId){
+        return ResponseEntity.ok().body(service.teachersTopics(teacherId));
     }
 
 }

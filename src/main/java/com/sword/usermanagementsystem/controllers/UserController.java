@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -108,5 +109,11 @@ public class UserController {
     @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
     public ResponseEntity<UserDTO> viewUserProfile (@PathVariable int userId){
         return ResponseEntity.ok().body(service.viewUserProfile(userId));
+    }
+
+    @PatchMapping("/update-profile/{userId}")
+    @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> updateUserProfile (@PathVariable int userId, @RequestBody UserDTO updatedUserDTO){
+        return ResponseEntity.ok().body(service.updateUserProfile(userId,updatedUserDTO));
     }
 }

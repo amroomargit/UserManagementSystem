@@ -233,4 +233,18 @@ public class UserService {
 
         return userMapper.toDTO(user);
     }
+
+    @Transactional
+    public UserDTO updateUserProfile(int userId, UserDTO updatedUserDTO){
+        User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
+
+        //Is there really anything we can even update without potentially ruining another part of the code?
+        user.setRole();
+        user.setStudent();
+        user.setTeacher();
+        user.setAdmin();
+        user.setPassword();
+        user.setId();
+        user.setUsername();
+    }
 }

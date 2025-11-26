@@ -71,4 +71,10 @@ public class TeacherController {
     public ResponseEntity<TeacherDTO> coursesTeacher(@PathVariable int courseId){
         return ResponseEntity.ok().body(service.coursesTeacher(courseId));
     }
+
+    @GetMapping("/topics-teachers/{topicId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TeacherDTO>> topicsTeachers(@PathVariable int topicId){
+        return ResponseEntity.ok().body(service.topicsTeachers(topicId));
+    }
 }

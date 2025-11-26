@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.services;
 
+import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.entities.Student;
@@ -104,6 +105,13 @@ public class TopicService {
         /* This gets a list of TopicDTOs of all the topics a student takes, but since there is an indirect link between
          student and topic (we have to access topic via course), we do it this way */
         return student.getCourses().stream().map(Course::getTopic).map(topicMapper::toDTO).toList();
+    }
+
+    @Transactional
+    public List<TopicDTO> teachersTopics(int teacherId){
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("No teacher with id %d",teacherId)));
+
+        return teacher.getTopics().stream().map(topicMapper::toDTO).toList();
     }
 
 

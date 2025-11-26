@@ -144,4 +144,11 @@ public class TeacherService {
 
         return teacherMapper.toDTO(course.getTeacher());
     }
+
+    @Transactional
+    public List<TeacherDTO> topicsTeachers(int topicId){
+        Topic topic = topicRepo.findById(topicId).orElseThrow(() -> new BusinessException(String.format("No topic with id %d",topicId)));
+
+        return topic.getTeachers().stream().map(teacherMapper::toDTO).toList();
+    }
 }
