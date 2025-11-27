@@ -145,4 +145,21 @@ public class StudentService {
          topic and student (we have to access topic via course), we do it this way */
         return topic.getCourses().stream().flatMap(course -> course.getStudents().stream()).map(studentMapper::toDTO).toList();
     }
+
+    @Transactional
+    public StudentDTO dropStudentOutOfCourse (int studentId, int courseId){
+        Course course = courseRepo.findById(courseId).orElseThrow(()->new BusinessException(String.format("There is no course with id %d",courseId)));
+        Student student = studentRepo.findById(studentId).orElseThrow(()->new BusinessException(String.format("There is no student with id %d",studentId)));
+
+        //Have to remove the relationship from both sides because this is a many-to-many relationship
+        boolean removedSideA = student.getCourses().removeIf(c -> c.getId() == courseId);
+        boolean removedSideB = course.getStudents().removeIf(s -> s.getId() == studentId);
+
+
+        if(!removedSideA && !removedSideB){
+            throw new BusinessException(String.format("Student %d is not enrolled in course %d",studentId,courseId));
+        }
+
+        return studentMapper.toDTO(student);
+    }
 }

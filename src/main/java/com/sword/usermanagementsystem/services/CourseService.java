@@ -2,6 +2,7 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
+import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.entities.*;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
@@ -136,5 +137,19 @@ public class CourseService {
         Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("no teacher with id %s",teacherId)));
 
         return teacher.getCourses().stream().map(courseMapper::toDTO).toList();
+    }
+
+    @Transactional
+    public CourseDTO reassignTeacherInChargeOfCourse(int newTeacherId, int courseId){
+        Teacher teacher = teacherRepo.findById(newTeacherId).orElseThrow(()->new BusinessException(String.format("There is no teacher with id %d",newTeacherId)));
+        Course course = courseRepo.findById(courseId).orElseThrow(()->new BusinessException(String.format("There is no course with id %d",courseId)));
+
+        if(course.getTeacher().getId() == newTeacherId){
+            throw new BusinessException(String.format("Teacher %d is already in charge of course %d",newTeacherId,courseId));
+        }
+
+        course.setTeacher(teacher);
+
+        return courseMapper.toDTO(course);
     }
 }

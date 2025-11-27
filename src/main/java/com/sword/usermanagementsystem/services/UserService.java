@@ -238,13 +238,14 @@ public class UserService {
     public UserDTO updateUserProfile(int userId, UserDTO updatedUserDTO){
         User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
 
-        //Is there really anything we can even update without potentially ruining another part of the code?
-        user.setRole();
-        user.setStudent();
-        user.setTeacher();
-        user.setAdmin();
-        user.setPassword();
-        user.setId();
-        user.setUsername();
+        if(userRepo.findByUsername(updatedUserDTO.getUsername()).isPresent()){
+            throw new BusinessException(String.format("The user name %s is already taken.",updatedUserDTO.getUsername()));
+        }
+
+        user.setUsername(updatedUserDTO.getUsername());
+
+        user.setPassword(passwordEncoder.encode(updatedUserDTO.getPassword()));
+
+        return userMapper.toDTO(user);
     }
 }

@@ -4,6 +4,7 @@ import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.entities.Student;
 import com.sword.usermanagementsystem.services.StudentService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,5 +81,11 @@ public class StudentController {
     @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
     public ResponseEntity<List<StudentDTO>> getTopicsStudents(@PathVariable int topicId){
         return ResponseEntity.ok().body(service.getTopicsStudents(topicId));
+    }
+
+    @PatchMapping("/drop-course/{studentId}/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<StudentDTO> dropStudentOutOfCourse(@PathVariable int studentId, @PathVariable int courseId){
+        return ResponseEntity.ok().body(service.dropStudentOutOfCourse(studentId,courseId));
     }
 }

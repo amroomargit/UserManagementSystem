@@ -77,4 +77,5 @@ public class TeacherController {
     public ResponseEntity<List<TeacherDTO>> topicsTeachers(@PathVariable int topicId){
         return ResponseEntity.ok().body(service.topicsTeachers(topicId));
     }
+
 }

@@ -151,4 +151,5 @@ public class TeacherService {
 
         return topic.getTeachers().stream().map(teacherMapper::toDTO).toList();
     }
+
 }

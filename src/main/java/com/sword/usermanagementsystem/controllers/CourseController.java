@@ -1,6 +1,7 @@
 package com.sword.usermanagementsystem.controllers;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
+import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,12 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     public ResponseEntity<List<CourseDTO>> teachersCourses(@PathVariable int teacherId){
         return ResponseEntity.ok().body(service.teachersCourses(teacherId));
+    }
+
+    @PatchMapping("/reassign-teacher-in-charge-of-course/{newTeacherId}/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<CourseDTO> reassignTeacherInChargeOfCourse (@PathVariable int newTeacherId, @PathVariable int courseId){
+        return ResponseEntity.ok().body(service.reassignTeacherInChargeOfCourse(newTeacherId,courseId));
     }
 }
 
