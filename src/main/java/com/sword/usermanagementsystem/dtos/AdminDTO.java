@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AdminDTO extends UserDTO{
     private int id;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     private UserDTO user;
 

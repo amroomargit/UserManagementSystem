@@ -10,7 +10,8 @@ import java.util.List;
 public class TeacherDTO extends UserDTO{ //TeacherDTO inherits UserDTO so that we can fill out more info for studentRegistration method in UserService
 
     private int id;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     private List<CourseDTO> courseList;
 

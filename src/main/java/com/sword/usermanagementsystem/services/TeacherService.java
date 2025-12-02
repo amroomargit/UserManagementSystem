@@ -110,7 +110,8 @@ public class TeacherService {
         Optional<Teacher> findTeacher = teacherRepo.findById(teacherId);
 
         if(findTeacher.isPresent()){
-            findTeacher.get().setName(teacherDTO.getName());
+            findTeacher.get().setFirstName(teacherDTO.getFirstName());
+            findTeacher.get().setLastName(teacherDTO.getLastName());
             return teacherMapper.toDTO(findTeacher.get());
         }
 

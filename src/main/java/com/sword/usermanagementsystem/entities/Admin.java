@@ -18,8 +18,11 @@ public class Admin {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "firstname")
+    private String firstName;
+
+    @Column(name = "lastname")
+    private String lastName;
 
     @OneToOne
     @JoinColumn(name = "userid", referencedColumnName = "id")

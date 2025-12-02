@@ -19,8 +19,11 @@ public class Teacher {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "firstname")
+    private String firstName;
+
+    @Column(name = "lastname")
+    private String lastName;
 
     //One teacher to many courses
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
