@@ -189,7 +189,6 @@ public class UserService {
 
         Teacher teacherEntity = teacherMapper.toEntity(teacherDTO);
         teacherEntity.setUser(userEntity);
-
         teacherRepo.save(teacherEntity);
 
         return teacherDTO;

@@ -1,5 +1,6 @@
 package com.sword.usermanagementsystem.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import org.slf4j.Logger;
 
+//@Slf4j to use log without Logger log
 @Aspect
 @Component
 public class LoggingAspect {
