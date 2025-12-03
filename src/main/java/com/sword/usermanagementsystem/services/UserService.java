@@ -157,16 +157,24 @@ public class UserService {
         if (userOpt.get().getStudent() != null) {
             StudentDTO studentDTO = studentMapper.toDTO(userOpt.get().getStudent());
             studentDTO.setUsername(dto.getUsername());
+            studentDTO.setFirstname(userOpt.get().getStudent().getFirstname());
+            studentDTO.setLastname(dto.getStudentEntity().getLastname());
             return studentDTO;
         }
         if (userOpt.get().getTeacher() != null) {
             TeacherDTO teacherDTO = teacherMapper.toDTO(userOpt.get().getTeacher());
             teacherDTO.setUsername(dto.getUsername());
+            teacherDTO.setFirstName(userOpt.get().getTeacher().getFirstName());
+            teacherDTO.setLastName(dto.getTeacherEntity().getLastName());
             return teacherDTO;
         }
         if (userOpt.get().getAdmin() != null) {
             AdminDTO adminDTO = adminMapper.toDTO(userOpt.get().getAdmin());
             adminDTO.setUsername(dto.getUsername());
+            var x = userOpt.get().getAdmin().getFirstName();
+            var y = userOpt.get().getAdmin().getLastName();
+            adminDTO.setFirstName(x);
+            adminDTO.setLastName(y);
             return adminDTO;
         }
 
