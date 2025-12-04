@@ -171,10 +171,8 @@ public class UserService {
         if (userOpt.get().getAdmin() != null) {
             AdminDTO adminDTO = adminMapper.toDTO(userOpt.get().getAdmin());
             adminDTO.setUsername(dto.getUsername());
-            var x = userOpt.get().getAdmin().getFirstName();
-            var y = userOpt.get().getAdmin().getLastName();
-            adminDTO.setFirstName(x);
-            adminDTO.setLastName(y);
+            adminDTO.setFirstName(userOpt.get().getAdmin().getFirstName());
+            adminDTO.setLastName(userOpt.get().getAdmin().getLastName());
             return adminDTO;
         }
 

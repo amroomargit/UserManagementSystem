@@ -32,5 +32,19 @@ public class UserDTO {
 
     private AdminDTO adminEntity;
 
+    //These two methods literally exist just so that we can see the first and last name in the frontend
+    public String getFirstName(){
+        if(studentEntity!=null){
+            return studentEntity.getFirstName();
+        }
+        return null;
+    }
+
+    public String getLastName(){
+        if(studentEntity!=null){
+            return studentEntity.getLastName();
+        }
+        return null;
+    }
 
 }
