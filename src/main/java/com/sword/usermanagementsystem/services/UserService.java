@@ -157,8 +157,8 @@ public class UserService {
         if (userOpt.get().getStudent() != null) {
             StudentDTO studentDTO = studentMapper.toDTO(userOpt.get().getStudent());
             studentDTO.setUsername(dto.getUsername());
-            studentDTO.setFirstname(dto.getFirstName());
-            studentDTO.setLastname(dto.getLastName());
+            studentDTO.setFirstName(dto.getFirstName());
+            studentDTO.setLastName(dto.getLastName());
             return studentDTO;
         }
         if (userOpt.get().getTeacher() != null) {

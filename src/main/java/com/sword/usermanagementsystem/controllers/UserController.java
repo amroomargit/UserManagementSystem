@@ -77,8 +77,8 @@ public class UserController {
     @PostMapping("/login")
     //Return type is generic ? because now several responses could be returned, an error, a pass, a string, etc.
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO){ //UserDTO instead of StudentDTO or TeacherDTO because we saved them in the User Repo after we converted them into User Entities in their respective classes
-        UserDTO user = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
-        if(user != null){
+        UserDTO dto = service.login(userDTO.getUsername(), userDTO.getPassword()); //Returning true or false to confirm that the user we are trying to log in as A. exists, and B. username and password were entered correctly
+        if(dto != null){
 
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(),userDTO.getPassword()));
 
@@ -93,8 +93,19 @@ public class UserController {
                 Map<String,String> response = new HashMap<>();
                 response.put("token",token);
                 response.put("role", userEntity.getRole());
-                response.put("firstName", user.getFirstName());
-                response.put("lastName", user.getLastName());
+                if(userEntity.getAdmin() != null){
+                    response.put("firstName", userEntity.getAdmin().getFirstName());
+                    response.put("lastName", userEntity.getAdmin().getLastName());
+                }
+                if(userEntity.getStudent() != null){
+                    response.put("firstName", userEntity.getStudent().getFirstName());
+                    response.put("lastName", userEntity.getStudent().getLastName());
+                }
+                if(userEntity.getTeacher() != null){
+                    response.put("firstName", userEntity.getTeacher().getFirstName());
+                    response.put("lastName", userEntity.getTeacher().getLastName());
+                }
+
                 return ResponseEntity.ok(response);
             }
         }

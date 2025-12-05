@@ -25,10 +25,10 @@ public class Student {
     private int id;
 
     @Column(name = "firstname", length = 100)
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname", length = 100)
-    private String lastname;
+    private String lastName;
 
     //ManyToMany between course and student
     @ManyToMany(mappedBy = "students") //"students" because that's the list name in Course class

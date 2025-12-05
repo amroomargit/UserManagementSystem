@@ -88,8 +88,8 @@ public class StudentService {
         Optional<Student> findStudent = studentRepo.findById(studentId);
 
         if (findStudent.isPresent()) {
-            findStudent.get().setFirstname(studentDTO.getFirstname());
-            findStudent.get().setLastname(studentDTO.getLastname());
+            findStudent.get().setFirstName(studentDTO.getFirstName());
+            findStudent.get().setLastName(studentDTO.getLastName());
             return studentMapper.toDTO(findStudent.get());
         }
 

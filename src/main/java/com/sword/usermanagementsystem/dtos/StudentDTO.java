@@ -10,8 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 public class StudentDTO extends UserDTO{ //StudentDTO inherits UserDTO so we can fill out more info for studentRegistration method in UserService
     private int id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
     //Reference to CourseDTO for the ManyToMany between course and student
     private List<CourseDTO> courseList;
