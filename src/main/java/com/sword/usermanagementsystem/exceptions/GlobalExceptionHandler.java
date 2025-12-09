@@ -22,10 +22,10 @@ public class GlobalExceptionHandler {
 
     /* The annotation below tells Spring: “If a MethodArgumentNotValidException is thrown (happens when @Valid fails),
     run this method.” */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
 
     // This method handles @Valid validation errors
     //Exception object ex contains details about which fields failed and why
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<ErrorDTO> handleModelException(MethodArgumentNotValidException ex){
 
         /* Loops through all the failed field validations.

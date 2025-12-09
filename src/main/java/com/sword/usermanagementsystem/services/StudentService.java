@@ -14,6 +14,7 @@ import com.sword.usermanagementsystem.repositories.StudentRepository;
 import com.sword.usermanagementsystem.repositories.TopicRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -98,13 +99,16 @@ public class StudentService {
 
     @Transactional
     public String deleteStudent(int studentId) {
-        Optional<Student> findStudent = studentRepo.findById(studentId);
-        if (findStudent.isPresent()) {
-            studentRepo.deleteById(studentId);
-            return "Student: " + studentId + " has been successfully deleted from student and users, certificate, course and course_student tables.";
+        Student findStudent = studentRepo.findById(studentId).orElseThrow(() -> new BusinessException("Student not found"));
+
+        for (Course c : findStudent.getCourses()) {
+            c.getStudents().remove(findStudent);
         }
-        throw new BusinessException("Unsuccessful Deletion.");
-    }
+
+        studentRepo.deleteById(studentId);
+        return "Student: " + studentId + " has been successfully deleted from student and users, certificate, course and course_student tables.";
+        }
+
 
 
     /*There is no studentId in course or courseId in student, it's a many-to-many relationship so we cant do it the same

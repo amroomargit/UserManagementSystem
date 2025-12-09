@@ -54,7 +54,7 @@ public class StudentController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/update-student-info/{studentId}")
+    @PutMapping("/update-student-info/{studentId}")
     public ResponseEntity<StudentDTO> updateStudentInfo(@PathVariable int studentId, @RequestBody StudentDTO studentDTO){
         return ResponseEntity.ok().body(service.updateStudentInfo(studentId, studentDTO));
     }
