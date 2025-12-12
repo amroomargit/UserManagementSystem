@@ -135,10 +135,14 @@ public class StudentService {
         Student student = studentRepo.findById(studentId).orElseThrow(() -> new BusinessException("There is no student " + studentId));
         Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("There is no course " + courseId));
 
-        student.getCourses().add(course);
-        course.getStudents().add(student);
+        boolean alreadyEnrolledCheck = student.getCourses().stream().anyMatch((c->c.getId() == courseId));
 
-        return student.getCourses().stream().map(courseMapper::toDTO).toList();
+        if(!alreadyEnrolledCheck) {
+            student.getCourses().add(course);
+            course.getStudents().add(student);
+            return student.getCourses().stream().map(courseMapper::toDTO).toList();
+        }
+        throw new BusinessException(student.getFirstName() +" "+ student.getLastName() +" is already enrolled in "+course.getName());
     }
 
     @Transactional
