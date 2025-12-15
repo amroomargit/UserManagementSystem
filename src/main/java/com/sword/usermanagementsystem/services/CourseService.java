@@ -127,7 +127,7 @@ public class CourseService {
             if(!studentsCourses.isEmpty()){
                 return studentsCourses.stream().map(courseMapper::toDTO).toList();
             }
-            throw new BusinessException("There is a student with id: "+studentId+", but, this student is not registered in any courses.");
+            throw new BusinessException(findStudent.get().getFirstName() + " " + findStudent.get().getLastName() + " is not registered in any courses");
         }
         throw new BusinessException("There is no student with the id: "+studentId);
     }

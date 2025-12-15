@@ -43,7 +43,7 @@ public class CourseController {
     }
 
     @GetMapping("/get-a-students-courses/{studentId}")
-    @PreAuthorize(("hasRole('ADMIN','TEACHER',STUDENT)"))
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     public ResponseEntity<List<CourseDTO>> getAStudentsCourses(@PathVariable int studentId){
         return ResponseEntity.ok().body(service.getAStudentsCourses(studentId));
     }
