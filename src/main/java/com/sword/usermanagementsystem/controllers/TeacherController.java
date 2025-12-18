@@ -30,14 +30,10 @@ public class TeacherController {
 
     //Check TeacherService class for description of assignTopic method
 
-    /* Parameters below are the integers that will be in the search bar, so
-     http://localhost:8081/teachers/{teacherId}/topics/{topicId} becomes
-     http://localhost:8081/teachers/1/topics/1 */
-
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping("/{teacherId}/topics/{topicId}")
-    public ResponseEntity<String> topicAssign(@PathVariable int teacherId, @PathVariable int topicId){
-        String successMessage = service.assignTopic(teacherId,topicId);
+    public ResponseEntity<String> assignTopicToTeacher(@PathVariable int teacherId, @PathVariable int topicId){
+        String successMessage = service.assignTopicToTeacher(teacherId,topicId);
         return ResponseEntity.ok().body(successMessage);
     }
 
@@ -65,16 +61,16 @@ public class TeacherController {
         return ResponseEntity.ok().body(service.assignTeacherToACourse(teacherId,courseId));
     }
 
-    @GetMapping("/courses-teacher/{courseId}")
+    @GetMapping("/get-courses-of-teacher/{courseId}")
     @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
-    public ResponseEntity<TeacherDTO> coursesTeacher(@PathVariable int courseId){
-        return ResponseEntity.ok().body(service.coursesTeacher(courseId));
+    public ResponseEntity<TeacherDTO> getCoursesOfATeacher(@PathVariable int courseId){
+        return ResponseEntity.ok().body(service.getCoursesOfATeacher(courseId));
     }
 
-    @GetMapping("/topics-teachers/{topicId}")
+    @GetMapping("/get-topics-of-teacher/{topicId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<TeacherDTO>> topicsTeachers(@PathVariable int topicId){
-        return ResponseEntity.ok().body(service.topicsTeachers(topicId));
+    public ResponseEntity<List<TeacherDTO>> getTopicsOfATeacher(@PathVariable int topicId){
+        return ResponseEntity.ok().body(service.getTopicsOfATeacher(topicId));
     }
 
 }

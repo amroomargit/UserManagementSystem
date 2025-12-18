@@ -78,7 +78,7 @@ public class TeacherService {
 
     @Transactional
     //This method assigns an existing Topic to the Topic list in the Teacher Entity we specify
-    public String assignTopic(int teacherId, int topicId){
+    public String assignTopicToTeacher(int teacherId, int topicId){
 
         /*Creating an empty teacher entity to pull the corresponding entity saved in the Teacher Repo and assign it to
          this empty object we just created. If the id is not found in the teacher repo, throw an exception because the
@@ -140,14 +140,14 @@ public class TeacherService {
     }
 
     @Transactional
-    public TeacherDTO coursesTeacher(int courseId){
+    public TeacherDTO getCoursesOfATeacher(int courseId){
         Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException(String.format("no course with id %s",courseId)));
 
         return teacherMapper.toDTO(course.getTeacher());
     }
 
     @Transactional
-    public List<TeacherDTO> topicsTeachers(int topicId){
+    public List<TeacherDTO> getTopicsOfATeacher(int topicId){
         Topic topic = topicRepo.findById(topicId).orElseThrow(() -> new BusinessException(String.format("No topic with id %d",topicId)));
 
         return topic.getTeachers().stream().map(teacherMapper::toDTO).toList();
