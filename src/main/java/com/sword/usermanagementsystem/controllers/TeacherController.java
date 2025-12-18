@@ -56,10 +56,11 @@ public class TeacherController {
         return ResponseEntity.ok().body(service.deleteTeacher(teacherId));
     }
 
-    @PatchMapping("/assign-teacher-to-a-course/{teacherId}/{courseId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> assignTeacherToACourse(@PathVariable int teacherId, @PathVariable int courseId){
-        return ResponseEntity.ok().body(service.assignTeacherToACourse(teacherId,courseId));
+    @PostMapping("/assign-teacher-to-a-course/{teacherId}/{courseId}")
+    public ResponseEntity<Map<String, String>> assignTeacherToACourse(@PathVariable int teacherId, @PathVariable int courseId){
+        String msg = service.assignTeacherToACourse(teacherId,courseId);
+        return ResponseEntity.ok(Map.of("message", msg));
     }
 
     @GetMapping("/get-courses-of-teacher/{courseId}")

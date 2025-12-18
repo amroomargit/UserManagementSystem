@@ -140,8 +140,32 @@ public class TeacherService {
         Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException("Teacher "+teacherId+" not found."));
         Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException("Course "+courseId+" not found."));
 
+        int courseCurrentTeacherId = course.getTeacher().getId();
+        String courseCurrentTeacher = course.getTeacher().getFirstName() + " " + course.getTeacher().getLastName();
+        String teacherName = teacher.getFirstName() + " " + teacher.getLastName();
+
+        /*If the teacher is not assigned to the topic of the course (if the teacher doesn't have the same topic as the course
+        assigned to them in the teacher_topic table in the database*/
+        if(!teacher.getTopics().contains(course.getTopic())){
+            throw new BusinessException(teacherName + " is not permitted to teach this course because the course's " +
+                    "topic has not been assigned to the teacher. If you wish to have " + teacherName + " teach this course, " +
+                    "then assign the topic " + course.getTopic() + " to them first.");
+        }
+
+        //If same teacher already teaches this course
+        if(teacher.getId() == courseCurrentTeacherId){
+            throw new BusinessException(teacherName+" already teaches this course.");
+        }
+
         course.setTeacher(teacher);
-        return ("Teacher "+course.getTeacher().getId()+" has been successfully assigned to course "+courseId);
+
+        //If someone else taught the course before and has been replaced
+        if(teacher.getId() != courseCurrentTeacherId){
+            return (teacherName+ " has replaced "+courseCurrentTeacher+" as the teacher of this course.");
+        }
+
+        //If no one taught the course
+        return (teacherName+ " has been successfully assigned to course "+course.getName());
     }
 
     @Transactional
