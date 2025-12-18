@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/teachers")
@@ -30,11 +31,11 @@ public class TeacherController {
 
     //Check TeacherService class for description of assignTopic method
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{teacherId}/topics/{topicId}")
-    public ResponseEntity<String> assignTopicToTeacher(@PathVariable int teacherId, @PathVariable int topicId){
-        String successMessage = service.assignTopicToTeacher(teacherId,topicId);
-        return ResponseEntity.ok().body(successMessage);
+    public ResponseEntity<Map<String, String>> assignTopicToTeacher(@PathVariable int teacherId, @PathVariable int topicId){
+        String msg = service.assignTopicToTeacher(teacherId,topicId);
+        return ResponseEntity.ok(Map.of("message", msg));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

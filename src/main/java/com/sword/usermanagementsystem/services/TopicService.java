@@ -1,5 +1,7 @@
 package com.sword.usermanagementsystem.services;
 
+import com.sword.usermanagementsystem.dtos.CourseDTO;
+import com.sword.usermanagementsystem.dtos.StudentDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.entities.Course;
@@ -43,17 +45,24 @@ public class TopicService {
     StudentRepository studentRepo;
 
     @Transactional
-    public List<TopicDTO> getAllTopics(){
-        List<Topic> topics = topicRepo.findAll();
-        List<TopicDTO> topicDTOS = new ArrayList<>();
+    public List<TopicDTO> getTopics(){
+        var topics = topicRepo.findAll();
 
+        var result = new ArrayList<TopicDTO>();
+        for(var topic:topics){
+            var courses = topic.getCourses();
+            var topicDTO = topicMapper.toDTO(topic);
+            topicDTO.setCourseList(new ArrayList<CourseDTO>());
 
-        for(Topic e : topics){
-            //mapping each entity to a DTO
-           // TopicDTO dto = mapper.topicToTopicDTO(e);
-           // topicDTOS.add(dto);
+            for(var course:courses){
+                var courseDTO  = courseMapper.toDTO(course);
+                topicDTO.getCourseList().add(courseDTO);
+
+            }
+            result.add(topicDTO);
         }
-        return topicDTOS;
+
+        return result;
     }
 
 

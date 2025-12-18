@@ -88,6 +88,11 @@ public class TeacherService {
         //Same with topic. We are pulling an Entity, not creating a new one here.
         Topic topic = topicRepo.findById(topicId).orElseThrow();
 
+        //Make sure the topic isn't already assigned to the teacher
+        if(teacher.getTopics().contains(topic)){
+            throw new BusinessException(topic.getName() +" is already assigned to "+teacher.getFirstName() + " " + teacher.getLastName());
+        }
+
         /* We want to get the list of Topic Entity objects associated with that specific Teacher Entity, and we want to
          add the topic we just pulled, and add it into that list. So basically, the Teacher with id 1 will
          also teach Topic with id 3 (the Topic we pulled). */

@@ -19,8 +19,7 @@ public class TopicController {
 
     @GetMapping("/all")
     public ResponseEntity<List<TopicDTO>> getTopics(){ //Check doc to see why we return ResponseEntity<>
-        var topicReturnVariable = service.getAllTopics(); //topicReturnVariable is needed so we can see in debugger
-        return ResponseEntity.ok().body(topicReturnVariable);
+        return ResponseEntity.ok().body(service.getTopics());
     }
 
     @PostMapping("/insert-topic")
