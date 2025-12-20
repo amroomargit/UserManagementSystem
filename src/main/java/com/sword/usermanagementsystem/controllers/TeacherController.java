@@ -1,6 +1,8 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
+import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,16 +65,16 @@ public class TeacherController {
         return ResponseEntity.ok(Map.of("message", msg));
     }
 
-    @GetMapping("/get-courses-of-teacher/{courseId}")
+    @GetMapping("/get-courses-of-teacher/{teacherId}")
     @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
-    public ResponseEntity<TeacherDTO> getCoursesOfATeacher(@PathVariable int courseId){
-        return ResponseEntity.ok().body(service.getCoursesOfATeacher(courseId));
+    public ResponseEntity<List<CourseDTO>> getCoursesOfATeacher(@PathVariable int teacherId){
+        return ResponseEntity.ok().body(service.getCoursesOfATeacher(teacherId));
     }
 
     @GetMapping("/get-topics-of-teacher/{topicId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<TeacherDTO>> getTopicsOfATeacher(@PathVariable int topicId){
-        return ResponseEntity.ok().body(service.getTopicsOfATeacher(topicId));
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
+    public ResponseEntity<List<TopicDTO>> getTopicsOfATeacher(@PathVariable int teacherId){
+        return ResponseEntity.ok().body(service.getTopicsOfATeacher(teacherId));
     }
 
 }

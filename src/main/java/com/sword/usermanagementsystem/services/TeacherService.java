@@ -2,6 +2,7 @@ package com.sword.usermanagementsystem.services;
 
 import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
+import com.sword.usermanagementsystem.dtos.TopicDTO;
 import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
@@ -9,6 +10,7 @@ import com.sword.usermanagementsystem.entities.User;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
+import com.sword.usermanagementsystem.mappers.TopicMapper;
 import com.sword.usermanagementsystem.mappers.UserMapper;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.TeacherRepository;
@@ -39,6 +41,9 @@ public class TeacherService {
 
     @Autowired
     CourseMapper courseMapper;
+
+    @Autowired
+    TopicMapper topicMapper;
 
     @Autowired
     UserRepository userRepo;
@@ -169,17 +174,25 @@ public class TeacherService {
     }
 
     @Transactional
-    public TeacherDTO getCoursesOfATeacher(int courseId){
-        Course course = courseRepo.findById(courseId).orElseThrow(() -> new BusinessException(String.format("no course with id %s",courseId)));
+    public List<CourseDTO> getCoursesOfATeacher(int teacherId){
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("There is no teacher with id: ",teacherId)));
 
-        return teacherMapper.toDTO(course.getTeacher());
+        if(teacher.getCourses().isEmpty()){
+            throw new BusinessException(String.format("%s does not teach any courses.",(teacher.getFirstName()+" "+teacher.getLastName())));
+        }
+
+        return teacher.getCourses().stream().map(courseMapper::toDTO).toList();
     }
 
     @Transactional
-    public List<TeacherDTO> getTopicsOfATeacher(int topicId){
-        Topic topic = topicRepo.findById(topicId).orElseThrow(() -> new BusinessException(String.format("No topic with id %d",topicId)));
+    public List<TopicDTO> getTopicsOfATeacher(int teacherId){
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("There is no teacher with id: ",teacherId)));
 
-        return topic.getTeachers().stream().map(teacherMapper::toDTO).toList();
+        if(teacher.getTopics().isEmpty()){
+            throw new BusinessException(String.format("%s does not teach any topics.",(teacher.getFirstName()+" "+teacher.getLastName())));
+        }
+
+        return teacher.getTopics().stream().map(topicMapper::toDTO).toList();
     }
 
 }
