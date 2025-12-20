@@ -71,7 +71,7 @@ public class TeacherController {
         return ResponseEntity.ok().body(service.getCoursesOfATeacher(teacherId));
     }
 
-    @GetMapping("/get-topics-of-teacher/{topicId}")
+    @GetMapping("/get-topics-of-teacher/{teacherId}")
     @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
     public ResponseEntity<List<TopicDTO>> getTopicsOfATeacher(@PathVariable int teacherId){
         return ResponseEntity.ok().body(service.getTopicsOfATeacher(teacherId));
