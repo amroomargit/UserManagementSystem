@@ -54,8 +54,9 @@ public class TeacherController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-teacher/{teacherId}")
-    public ResponseEntity<String> deleteTeacher(@PathVariable int teacherId){
-        return ResponseEntity.ok().body(service.deleteTeacher(teacherId));
+    public ResponseEntity<Map<String, String>> deleteTeacher(@PathVariable int teacherId){
+        String msg = service.deleteTeacher(teacherId);
+        return ResponseEntity.ok(Map.of("message",msg));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

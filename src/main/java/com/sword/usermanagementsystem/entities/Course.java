@@ -32,8 +32,8 @@ public class Course {
     private LocalDateTime endtime;
 
     //ManyToOne between course and teacher
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacherid", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_teacher", foreignKeyDefinition = "FOREIGN KEY (teacherid) REFERENCES teacher(id) ON DELETE CASCADE") /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/) //The JoinColumn connects primary and foreign keys
+    @ManyToOne
+    @JoinColumn(name = "teacherid", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_teacher", foreignKeyDefinition = "FOREIGN KEY (teacherid) REFERENCES teacher(id) ON DELETE SET NULL") /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/) //The JoinColumn connects primary and foreign keys
     private Teacher teacher;
 
     //ManyToOne between course and topic

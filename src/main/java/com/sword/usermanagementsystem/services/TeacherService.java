@@ -130,14 +130,15 @@ public class TeacherService {
 
     @Transactional
     public String deleteTeacher(int teacherId){
-        Optional<Teacher> teacher = teacherRepo.findById(teacherId);
+        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException("Teacher not found"));
 
-        if(teacher.isPresent()){
-            teacherRepo.deleteById(teacherId);
-            return "Teacher successfully deleted from teacher and users, course, and teacher_topic tables.";
+        for(Course course : teacher.getCourses()){
+            course.setTeacher(null);
         }
 
-        throw new BusinessException("Unsuccessful Deletion.");
+        teacherRepo.delete(teacher);
+
+        return "Teacher deleted and courses preserved.";
     }
 
     @Transactional

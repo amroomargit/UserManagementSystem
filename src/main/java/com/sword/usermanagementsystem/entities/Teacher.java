@@ -26,7 +26,7 @@ public class Teacher {
     private String lastName;
 
     //One teacher to many courses
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true /*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
+    @OneToMany(mappedBy = "teacher"/*,fetch = FetchType.LAZY or /*,fetch = FetchType.EAGER*/)
     private List<Course> courses;
 
     //Teacher and User
