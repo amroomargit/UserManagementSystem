@@ -1,17 +1,17 @@
 package com.sword.usermanagementsystem.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 /*Note that we create the table in the code, but we add rows to the tables and fill in values in the db browser
 (i.e. DataGrip, PgAdmin, etc.), not the code */
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"courses", "user",})
 @Table(name = "teacher")
 public class Teacher {
     @Id
