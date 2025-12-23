@@ -243,11 +243,18 @@ public class UserService {
     public UserDTO updateUserProfile(int userId, UserDTO updatedUserDTO){
         User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
 
-        if(userRepo.findByUsername(updatedUserDTO.getUsername()).isPresent()){
-            throw new BusinessException(String.format("The user name %s is already taken.",updatedUserDTO.getUsername()));
+        if(user.getRole().equals("ROLE_STUDENT")){
+            user.getStudent().setFirstName(updatedUserDTO.getFirstName());
+            user.getStudent().setLastName(updatedUserDTO.getLastName());
         }
-
-        user.setUsername(updatedUserDTO.getUsername());
+        if(user.getRole().equals("ROLE_TEACHER")){
+            user.getTeacher().setFirstName(updatedUserDTO.getFirstName());
+            user.getTeacher().setLastName(updatedUserDTO.getLastName());
+        }
+        if(user.getRole().equals("ROLE_ADMIN")){
+            user.getAdmin().setFirstName(updatedUserDTO.getFirstName());
+            user.getAdmin().setLastName(updatedUserDTO.getLastName());
+        }
 
         user.setPassword(passwordEncoder.encode(updatedUserDTO.getPassword()));
 

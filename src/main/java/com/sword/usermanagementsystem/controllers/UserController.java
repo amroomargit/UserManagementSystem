@@ -90,20 +90,26 @@ public class UserController {
                 }
 
                 String token = jwtService.generateToken(userEntity);
-                Map<String,String> response = new HashMap<>();
+                Map<String,Object> response = new HashMap<>();
                 response.put("token",token);
                 response.put("role", userEntity.getRole());
                 if(userEntity.getAdmin() != null){
                     response.put("firstName", userEntity.getAdmin().getFirstName());
                     response.put("lastName", userEntity.getAdmin().getLastName());
+                    response.put("username",userEntity.getUsername());
+                    response.put("id",userEntity.getId());
                 }
                 if(userEntity.getStudent() != null){
                     response.put("firstName", userEntity.getStudent().getFirstName());
                     response.put("lastName", userEntity.getStudent().getLastName());
+                    response.put("username",userEntity.getUsername());
+                    response.put("id",userEntity.getId());
                 }
                 if(userEntity.getTeacher() != null){
                     response.put("firstName", userEntity.getTeacher().getFirstName());
                     response.put("lastName", userEntity.getTeacher().getLastName());
+                    response.put("username",userEntity.getUsername());
+                    response.put("id",userEntity.getId());
                 }
 
                 return ResponseEntity.ok(response);
@@ -124,7 +130,7 @@ public class UserController {
         return ResponseEntity.ok().body(service.viewUserProfile(userId));
     }
 
-    @PatchMapping("/update-profile/{userId}")
+    @PutMapping("/update-profile/{userId}")
     @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
     public ResponseEntity<UserDTO> updateUserProfile (@PathVariable int userId, @RequestBody UserDTO updatedUserDTO){
         return ResponseEntity.ok().body(service.updateUserProfile(userId,updatedUserDTO));
