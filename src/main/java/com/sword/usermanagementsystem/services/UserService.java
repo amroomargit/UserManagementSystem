@@ -233,30 +233,49 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO viewUserProfile(int userId){
+    public UpdateDTO viewUserProfile(int userId){
         User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
 
-        return userMapper.toDTO(user);
+        UpdateDTO returnDTO = new UpdateDTO();
+
+        if(user.getRole().equals("ROLE_STUDENT")){
+            returnDTO.setUsername(user.getUsername());
+            returnDTO.setFirstName(user.getStudent().getFirstName());
+            returnDTO.setLastName( user.getStudent().getLastName());
+        }
+        if(user.getRole().equals("ROLE_TEACHER")){
+            returnDTO.setUsername(user.getUsername());
+            returnDTO.setFirstName(user.getTeacher().getFirstName());
+            returnDTO.setLastName( user.getTeacher().getLastName());
+        }
+        if(user.getRole().equals("ROLE_ADMIN")){
+            returnDTO.setUsername(user.getUsername());
+            returnDTO.setFirstName(user.getAdmin().getFirstName());
+            returnDTO.setLastName(user.getAdmin().getLastName());
+        }
+
+        return returnDTO;
     }
 
     @Transactional
-    public UserDTO updateUserProfile(int userId, UserDTO updatedUserDTO){
+    public UserDTO updateUserProfile(int userId, UpdateDTO updateDTO){
         User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
 
         if(user.getRole().equals("ROLE_STUDENT")){
-            user.getStudent().setFirstName(updatedUserDTO.getFirstName());
-            user.getStudent().setLastName(updatedUserDTO.getLastName());
+            user.getStudent().setFirstName(updateDTO.getFirstName());
+            user.getStudent().setLastName(updateDTO.getLastName());
         }
         if(user.getRole().equals("ROLE_TEACHER")){
-            user.getTeacher().setFirstName(updatedUserDTO.getFirstName());
-            user.getTeacher().setLastName(updatedUserDTO.getLastName());
+            user.getTeacher().setFirstName(updateDTO.getFirstName());
+            user.getTeacher().setLastName(updateDTO.getLastName());
         }
         if(user.getRole().equals("ROLE_ADMIN")){
-            user.getAdmin().setFirstName(updatedUserDTO.getFirstName());
-            user.getAdmin().setLastName(updatedUserDTO.getLastName());
+            user.getAdmin().setFirstName(updateDTO.getFirstName());
+            user.getAdmin().setLastName(updateDTO.getLastName());
         }
 
-        user.setPassword(passwordEncoder.encode(updatedUserDTO.getPassword()));
+
+        user.setPassword(passwordEncoder.encode(updateDTO.getPassword()));
 
         return userMapper.toDTO(user);
     }

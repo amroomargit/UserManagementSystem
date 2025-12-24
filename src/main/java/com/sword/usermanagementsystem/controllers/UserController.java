@@ -126,13 +126,13 @@ public class UserController {
 
     @GetMapping("/view-user-profile/{userId}")
     @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> viewUserProfile (@PathVariable int userId){
+    public ResponseEntity<UpdateDTO> viewUserProfile (@PathVariable int userId){
         return ResponseEntity.ok().body(service.viewUserProfile(userId));
     }
 
     @PutMapping("/update-profile/{userId}")
     @PreAuthorize("isAuthenticated() or hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> updateUserProfile (@PathVariable int userId, @RequestBody UserDTO updatedUserDTO){
-        return ResponseEntity.ok().body(service.updateUserProfile(userId,updatedUserDTO));
+    public ResponseEntity<UserDTO> updateUserProfile (@PathVariable int userId, @RequestBody UpdateDTO updateDTO){
+        return ResponseEntity.ok().body(service.updateUserProfile(userId,updateDTO));
     }
 }
