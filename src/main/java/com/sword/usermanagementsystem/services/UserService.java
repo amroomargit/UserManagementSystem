@@ -234,6 +234,9 @@ public class UserService {
 
     @Transactional
     public UpdateDTO viewUserProfile(int userId){
+        /*IGNORE THE LOGIC IN THIS METHOD, WE LITERALLY NEVER USE THIS ENDPOINT IN THE FRONTEND, I CAME UP WITH A
+        ROUNDABOUT WAY TO UPDATE THE USER AND VIEW THE UPDATED INFO USING AUTH AND THE UPDATESTUDENTPOPUP, GO READ THE
+        COMMENTS THERE*/
         User user = userRepo.findById(userId).orElseThrow(() -> new BusinessException(String.format("There is no user with Id %d",userId)));
 
         UpdateDTO returnDTO = new UpdateDTO();

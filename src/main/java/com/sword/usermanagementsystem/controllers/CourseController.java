@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/courses")
@@ -38,8 +39,9 @@ public class CourseController {
 
     @DeleteMapping("/delete-course/{courseId}")
     @PreAuthorize(("hasRole('ADMIN')"))
-    public ResponseEntity<String> deleteCourse(@PathVariable int courseId) {
-        return ResponseEntity.ok().body(service.deleteCourse(courseId));
+    public ResponseEntity<Map<String,String>> deleteCourse(@PathVariable int courseId) {
+        String msg = service.deleteCourse(courseId);
+        return ResponseEntity.ok(Map.of("message",msg));
     }
 
     @GetMapping("/get-a-students-courses/{studentId}")

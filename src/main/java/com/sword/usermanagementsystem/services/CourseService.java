@@ -9,10 +9,7 @@ import com.sword.usermanagementsystem.mappers.CourseMapper;
 import com.sword.usermanagementsystem.mappers.StudentMapper;
 import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.TopicMapper;
-import com.sword.usermanagementsystem.repositories.CertificateRepository;
-import com.sword.usermanagementsystem.repositories.CourseRepository;
-import com.sword.usermanagementsystem.repositories.StudentRepository;
-import com.sword.usermanagementsystem.repositories.TeacherRepository;
+import com.sword.usermanagementsystem.repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +44,9 @@ public class CourseService {
     TopicMapper topicMapper;
 
     @Autowired
+    TopicRepository topicRepo;
+
+    @Autowired
     TeacherRepository teacherRepo;
 
     //ManyToMany between courses and students
@@ -77,8 +77,29 @@ public class CourseService {
         if(courseRepo.findByName(courseDTO.getName()).isPresent()){
             throw new BusinessException("Course Already Exists.");
         }
-        courseRepo.save(courseMapper.toEntity(courseDTO));
-        return courseDTO;
+
+        Course course = courseMapper.toEntity(courseDTO);
+
+        if (courseDTO.getTeacher() != null) {
+            Teacher teacher = teacherRepo.findById(courseDTO.getTeacher().getId()).orElseThrow(() -> new BusinessException("Teacher not found"));
+
+            if(!teacher.getTopics().contains(course.getTopic())){
+                String teacherName = teacher.getFirstName() + " " + teacher.getLastName();
+                throw new BusinessException(teacherName + " is not permitted to teach this course because the course's " +
+                        "topic has not been assigned to the teacher. If you wish to have " + teacherName + " teach this course, " +
+                        "then assign the topic " + course.getTopic().getName() + " to them first.");
+            }
+
+            course.setTeacher(teacher);
+        }
+
+        if (courseDTO.getTopic() != null) {
+            Topic topic = topicRepo.findById(courseDTO.getTopic().getId()).orElseThrow(() -> new BusinessException("Topic not found"));
+            course.setTopic(topic);
+        }
+
+        courseRepo.save(course);
+        return courseMapper.toDTO(course);
     }
 
     @Transactional

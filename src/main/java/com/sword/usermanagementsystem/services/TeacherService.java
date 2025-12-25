@@ -153,7 +153,7 @@ public class TeacherService {
         if(!teacher.getTopics().contains(course.getTopic())){
             throw new BusinessException(teacherName + " is not permitted to teach this course because the course's " +
                     "topic has not been assigned to the teacher. If you wish to have " + teacherName + " teach this course, " +
-                    "then assign the topic " + course.getTopic() + " to them first.");
+                    "then assign the topic " + course.getTopic().getName() + " to them first.");
         }
 
         Teacher courseCurrentTeacher = course.getTeacher();
