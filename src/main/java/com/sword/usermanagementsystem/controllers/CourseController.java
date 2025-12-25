@@ -32,7 +32,7 @@ public class CourseController {
     }
 
     @PostMapping("/update-course-info/{courseId}")
-    @PatchMapping(("hasRole('ADMIN')"))
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<CourseDTO> updateCourseInfo(@PathVariable int courseId, @RequestBody CourseDTO courseDTO) {
         return ResponseEntity.ok().body(service.updateCourseInfo(courseId, courseDTO));
     }

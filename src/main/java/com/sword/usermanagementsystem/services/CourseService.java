@@ -104,29 +104,26 @@ public class CourseService {
 
     @Transactional
     public CourseDTO updateCourseInfo(int courseId, CourseDTO courseDTO){
-        Optional<Course> findCourse = courseRepo.findById(courseId);
+        Course course = courseRepo.findById(courseId).orElseThrow(()->new BusinessException(String.format("There is no course with id %d",courseId)));
 
-        if(findCourse.isPresent()){
-            Course course = findCourse.get();
+        course.setStarttime(courseDTO.getStarttime());
+        course.setEndtime(courseDTO.getEndtime());
 
-            course.setName(courseDTO.getName());
+        Teacher teacher = teacherRepo.findById(courseDTO.getTeacher().getId()).orElseThrow(()-> new BusinessException(String.format("There is no teacher with id %d",courseDTO.getTeacher().getId())));
+        Topic topic = topicRepo.findById(courseDTO.getTopic().getId()).orElseThrow(()-> new BusinessException(String.format("There is no topic with id %d",courseDTO.getTopic().getId())));
 
-            List<Student> updatedStudents = courseDTO.getStudentList().stream().map(studentDTO -> studentRepo.findById(studentDTO.getId()).orElseThrow(()-> new BusinessException("Student not found with ID: " + studentDTO.getId()))).toList();
-            course.setStudents(updatedStudents);
+        course.setTeacher(teacher);
 
-            List<Certificate> updatedCertificates = courseDTO.getCertificateList().stream().map(certificateDTO -> certificateRepo.findById(certificateDTO.getId()).orElseThrow(()-> new BusinessException("Certificate not found with ID: " + certificateDTO.getId()))).toList();
-            course.setCertificates(updatedCertificates);
-
-            course.setName(courseDTO.getName());
-            course.setStarttime(courseDTO.getStarttime());
-            course.setEndtime(courseDTO.getEndtime());
-            course.setTeacher(teacherMapper.toEntity(courseDTO.getTeacher()));
-            course.setTopic(topicMapper.toEntity(courseDTO.getTopic()));
-
-            return courseDTO;
+        if(!teacher.getTopics().contains(topic)){
+            String teacherName = teacher.getFirstName() + " " + teacher.getLastName();
+            throw new BusinessException(teacherName + " is not permitted to teach this course because the course's " +
+                    "topic has not been assigned to the teacher. If you wish to have " + teacherName + " teach this course, " +
+                    "then assign the topic " + topic.getName() + " to them first.");
         }
 
-        throw new BusinessException("Unsuccessful Update");
+        course.setTopic(topic);
+
+        return courseDTO;
     }
 
     @Transactional
