@@ -105,22 +105,21 @@ public class CourseService {
     @Transactional
     public CourseDTO updateCourseInfo(int courseId, CourseDTO courseDTO){
         Course course = courseRepo.findById(courseId).orElseThrow(()->new BusinessException(String.format("There is no course with id %d",courseId)));
-
-        course.setStarttime(courseDTO.getStarttime());
-        course.setEndtime(courseDTO.getEndtime());
-
         Teacher teacher = teacherRepo.findById(courseDTO.getTeacher().getId()).orElseThrow(()-> new BusinessException(String.format("There is no teacher with id %d",courseDTO.getTeacher().getId())));
         Topic topic = topicRepo.findById(courseDTO.getTopic().getId()).orElseThrow(()-> new BusinessException(String.format("There is no topic with id %d",courseDTO.getTopic().getId())));
 
-        course.setTeacher(teacher);
+        boolean hasTopic = teacher.getTopics().stream().anyMatch(t -> t.getId() == topic.getId());
 
-        if(!teacher.getTopics().contains(topic)){
+        if(!hasTopic){
             String teacherName = teacher.getFirstName() + " " + teacher.getLastName();
             throw new BusinessException(teacherName + " is not permitted to teach this course because the course's " +
                     "topic has not been assigned to the teacher. If you wish to have " + teacherName + " teach this course, " +
                     "then assign the topic " + topic.getName() + " to them first.");
         }
 
+        course.setStarttime(courseDTO.getStarttime());
+        course.setEndtime(courseDTO.getEndtime());
+        course.setTeacher(teacher);
         course.setTopic(topic);
 
         return courseDTO;
