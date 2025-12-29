@@ -94,7 +94,8 @@ public class TeacherService {
         Topic topic = topicRepo.findById(topicId).orElseThrow();
 
         //Make sure the topic isn't already assigned to the teacher
-        if(teacher.getTopics().contains(topic)){
+        boolean alreadyAssigned = teacher.getTopics().stream().anyMatch(t -> t.getId() == topic.getId());
+        if(alreadyAssigned){
             throw new BusinessException(topic.getName() +" is already assigned to "+teacher.getFirstName() + " " + teacher.getLastName());
         }
 
