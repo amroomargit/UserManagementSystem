@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,13 +105,23 @@ public class TopicService {
 
     @Transactional
     public String deleteTopic(int topicId){
-        Optional<Topic> findTopic = topicRepo.findById(topicId);
-        if(findTopic.isPresent()){
-            topicRepo.deleteById(topicId);
-            return "Topic: "+ topicId +" has been successfully deleted from topic, course and teacher_topic tables.";
-        }
-        throw new BusinessException("Unsuccessful Deletion.");
+        Topic topic = topicRepo.findById(topicId).orElseThrow(()-> new BusinessException(String.format("There is no topic with id %d",topicId)));
 
+        /*Making a duplicate list of teacher objects in the topic, so we can modify without making any changes to
+        the actual list until we are sure everything is good */
+        for(Teacher teacher:new HashSet<>(topic.getTeachers())){
+            teacher.getTopics().remove(topic);
+        }
+        topic.getTeachers().clear(); //Severing the relationship between the topic and teachers
+
+        for(Course course:new HashSet<>(topic.getCourses())){
+            course.setTopic(null);
+        }
+        topic.getCourses().clear();
+
+        topicRepo.deleteById(topicId);
+
+        return String.format("Topic %d has been deleted",topicId);
     }
 
     @Transactional

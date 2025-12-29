@@ -40,7 +40,7 @@ public class Course {
     @ManyToOne /*No cascading here because it causes an issue when deleting a teacher if there is a row in course table
     that links teacher, topic and course, causing the topic to delete from its own table entirely. This only happens
     with ManyToMany relationships */
-    @JoinColumn(name = "topicid", referencedColumnName = "id")
+    @JoinColumn(name = "topicid", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_course_topic",foreignKeyDefinition = "FOREIGN KEY (topicid) REFERENCES topic(id) ON DELETE SET NULL"))
     private Topic topic;
     //Cascading allowed on child side though, so there is in topic entity class
 
