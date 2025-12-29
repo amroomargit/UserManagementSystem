@@ -28,8 +28,8 @@ public class TopicController {
         return ResponseEntity.ok().body(service.newTopic(topicDTO));
     }
 
-    @PostMapping("/update-topic-info/{topicId}")
-    @PatchMapping(("hasRole('ADMIN')"))
+    @PutMapping("/update-topic-info/{topicId}")
+    @PreAuthorize(("hasRole('ADMIN')"))
     public ResponseEntity<TopicDTO> updateTopicInfo(@PathVariable int topicId, @RequestBody TopicDTO topicDTO){
         return ResponseEntity.ok().body(service.updateTopicInfo(topicId, topicDTO));
     }
@@ -46,10 +46,10 @@ public class TopicController {
         return ResponseEntity.ok().body(service.getAStudentsTopics(studentId));
     }
 
-    @GetMapping("/teachers-topics/{teacherId}")
+    @GetMapping("/topics-teachers/{topicId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<TopicDTO>> teachersTopics(@PathVariable int teacherId){
-        return ResponseEntity.ok().body(service.teachersTopics(teacherId));
+    public ResponseEntity<List<TeacherDTO>> topicsTeachers(@PathVariable int topicId){
+        return ResponseEntity.ok().body(service.topicsTeachers(topicId));
     }
 
 }

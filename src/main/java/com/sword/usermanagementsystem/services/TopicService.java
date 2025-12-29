@@ -10,6 +10,7 @@ import com.sword.usermanagementsystem.entities.Teacher;
 import com.sword.usermanagementsystem.entities.Topic;
 import com.sword.usermanagementsystem.exceptions.BusinessException;
 import com.sword.usermanagementsystem.mappers.CourseMapper;
+import com.sword.usermanagementsystem.mappers.TeacherMapper;
 import com.sword.usermanagementsystem.mappers.TopicMapper;
 import com.sword.usermanagementsystem.repositories.CourseRepository;
 import com.sword.usermanagementsystem.repositories.StudentRepository;
@@ -43,6 +44,9 @@ public class TopicService {
 
     @Autowired
     StudentRepository studentRepo;
+
+    @Autowired
+    TeacherMapper teacherMapper;
 
     @Transactional
     public List<TopicDTO> getTopics(){
@@ -84,11 +88,13 @@ public class TopicService {
 
             topic.setName(topicDTO.getName());
 
+            /*
             List<Course> updatedCourses = topicDTO.getCourseList().stream().map(courseDTO -> courseRepo.findById(courseDTO.getId()).orElseThrow(()-> new BusinessException("Course not found with ID: " + courseDTO.getId()))).toList();
             topic.setCourses(updatedCourses);
 
             List<Teacher> updatedTeachers = topicDTO.getTeacherIds().stream().map(teacherId -> teacherRepo.findById(teacherId).orElseThrow(()-> new BusinessException("Teacher not found with ID: " + teacherId))).toList();
             topic.setTeachers(updatedTeachers);
+            */
 
             return topicDTO;
         }
@@ -117,10 +123,10 @@ public class TopicService {
     }
 
     @Transactional
-    public List<TopicDTO> teachersTopics(int teacherId){
-        Teacher teacher = teacherRepo.findById(teacherId).orElseThrow(() -> new BusinessException(String.format("No teacher with id %d",teacherId)));
+    public List<TeacherDTO> topicsTeachers(int topicId){
+        Topic topic = topicRepo.findById(topicId).orElseThrow(() -> new BusinessException(String.format("No topic with id %d",topicId)));
 
-        return teacher.getTopics().stream().map(topicMapper::toDTO).toList();
+        return topic.getTeachers().stream().map(teacherMapper::toDTO).toList();
     }
 
 
