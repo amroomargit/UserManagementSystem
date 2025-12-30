@@ -12,4 +12,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     /*primary key is of type Integer, that's why it's listed next to the Course entity */
 
     Optional<Course> findByName(String username);
+
+    boolean existsByTopic_Id(int topicId);
 }

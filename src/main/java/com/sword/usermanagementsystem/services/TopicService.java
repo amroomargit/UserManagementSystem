@@ -104,12 +104,13 @@ public class TopicService {
     }
 
     @Transactional
-    public List<CourseDTO> deleteTopic(int topicId){
+    public String deleteTopic(int topicId){
         Topic topic = topicRepo.findById(topicId).orElseThrow(()-> new BusinessException(String.format("There is no topic with id %d",topicId)));
+        String topicName = topic.getName();
 
-        /*Save list of courses that the topic was associated with, so we can return it to the front end and force an
-        update of all those courses because they now have no topic */
-        List<CourseDTO> courseList = topic.getCourses().stream().map(courseMapper::toDTO).toList();
+        if(courseRepo.existsByTopic_Id(topicId)){
+            throw new BusinessException(String.format("%s is associated with one or more courses, so it cannot be deleted.",topicName));
+        }
 
         /*Making a duplicate list of teacher objects in the topic, so we can modify without making any changes to
         the actual list until we are sure everything is good */
@@ -119,13 +120,9 @@ public class TopicService {
         }
         topic.getTeachers().clear(); //Severing the relationship between the topic and teachers
 
-        for (Course course : new HashSet<>(topic.getCourses())) {
-            course.setTopic(null);
-        }
-
         topicRepo.delete(topic);
 
-        return courseList;
+        return String.format("%s has been deleted.",(topicName));
     }
 
     @Transactional
