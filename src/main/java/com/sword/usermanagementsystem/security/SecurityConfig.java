@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/teacher/**").hasRole("TEACHER")
                         .requestMatchers("/student/**").hasRole("STUDENT")
+                        .requestMatchers("/topics/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .cors(Customizer.withDefaults())

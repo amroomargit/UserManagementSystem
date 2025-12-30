@@ -120,6 +120,7 @@ public class TopicService {
         }
         topic.getTeachers().clear(); //Severing the relationship between the topic and teachers
 
+        teacherRepo.deleteTeacherTopicLinks(topicId);
         topicRepo.delete(topic);
 
         return String.format("%s has been deleted.",(topicName));

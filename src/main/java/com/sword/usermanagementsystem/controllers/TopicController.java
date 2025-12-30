@@ -38,10 +38,10 @@ public class TopicController {
     }
 
     @DeleteMapping("/delete-topic/{topicId}")
-    @PreAuthorize(("hasRole('ADMIN')"))
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String,String>> deleteTopic(@PathVariable int topicId){
         String msg = service.deleteTopic(topicId);
-        return ResponseEntity.ok(Map.of("Message",msg));
+        return ResponseEntity.ok(Map.of("message",msg));
     }
 
     @GetMapping("/students-topics/{studentId}")
