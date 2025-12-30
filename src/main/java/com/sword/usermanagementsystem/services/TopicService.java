@@ -104,24 +104,28 @@ public class TopicService {
     }
 
     @Transactional
-    public String deleteTopic(int topicId){
+    public List<CourseDTO> deleteTopic(int topicId){
         Topic topic = topicRepo.findById(topicId).orElseThrow(()-> new BusinessException(String.format("There is no topic with id %d",topicId)));
+
+        /*Save list of courses that the topic was associated with, so we can return it to the front end and force an
+        update of all those courses because they now have no topic */
+        List<CourseDTO> courseList = topic.getCourses().stream().map(courseMapper::toDTO).toList();
 
         /*Making a duplicate list of teacher objects in the topic, so we can modify without making any changes to
         the actual list until we are sure everything is good */
+        //We don't do this for courses because the DB already handles this via ON DELETE SET NULL (go look in the Course entity under topic)
         for(Teacher teacher:new HashSet<>(topic.getTeachers())){
             teacher.getTopics().remove(topic);
         }
         topic.getTeachers().clear(); //Severing the relationship between the topic and teachers
 
-        for(Course course:new HashSet<>(topic.getCourses())){
+        for (Course course : new HashSet<>(topic.getCourses())) {
             course.setTopic(null);
         }
-        topic.getCourses().clear();
 
-        topicRepo.deleteById(topicId);
+        topicRepo.delete(topic);
 
-        return String.format("Topic %d has been deleted",topicId);
+        return courseList;
     }
 
     @Transactional

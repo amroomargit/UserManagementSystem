@@ -1,7 +1,9 @@
 package com.sword.usermanagementsystem.controllers;
 
+import com.sword.usermanagementsystem.dtos.CourseDTO;
 import com.sword.usermanagementsystem.dtos.TeacherDTO;
 import com.sword.usermanagementsystem.dtos.TopicDTO;
+import com.sword.usermanagementsystem.entities.Course;
 import com.sword.usermanagementsystem.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/topics")
@@ -36,7 +39,7 @@ public class TopicController {
 
     @DeleteMapping("/delete-topic/{topicId}")
     @PreAuthorize(("hasRole('ADMIN')"))
-    public ResponseEntity<String> deleteTopic(@PathVariable int topicId){
+    public ResponseEntity<List<CourseDTO>> deleteTopic(@PathVariable int topicId){
         return ResponseEntity.ok().body(service.deleteTopic(topicId));
     }
 
