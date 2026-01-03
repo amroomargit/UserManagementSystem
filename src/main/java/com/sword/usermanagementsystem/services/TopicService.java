@@ -109,10 +109,10 @@ public class TopicService {
             throw new BusinessException(String.format("%s is associated with one or more courses, so it cannot be deleted.",topicName));
         }
 
-        /*fix
-        if(teacherRepo.existsByTopic_Id(topicId)){
-            throw new BusinessException(String.format("%s is associated with one or more teachers, so it cannot be deleted.",topicName));
-        } */
+
+        if (!topic.getTeachers().isEmpty()) {
+            throw new BusinessException(String.format("%s is associated with one or more teachers, so it cannot be deleted.", topicName));
+        }
 
         topicRepo.delete(topic);
 
