@@ -20,10 +20,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //This service is for the many to many with the student
 @Service
@@ -112,15 +109,11 @@ public class TopicService {
             throw new BusinessException(String.format("%s is associated with one or more courses, so it cannot be deleted.",topicName));
         }
 
-        /*Making a duplicate list of teacher objects in the topic, so we can modify without making any changes to
-        the actual list until we are sure everything is good */
-        //We don't do this for courses because the DB already handles this via ON DELETE SET NULL (go look in the Course entity under topic)
-        for(Teacher teacher:new HashSet<>(topic.getTeachers())){
-            teacher.getTopics().remove(topic);
-        }
-        topic.getTeachers().clear(); //Severing the relationship between the topic and teachers
+        /*fix
+        if(teacherRepo.existsByTopic_Id(topicId)){
+            throw new BusinessException(String.format("%s is associated with one or more teachers, so it cannot be deleted.",topicName));
+        } */
 
-        teacherRepo.deleteTeacherTopicLinks(topicId);
         topicRepo.delete(topic);
 
         return String.format("%s has been deleted.",(topicName));
